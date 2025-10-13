@@ -5,20 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#0b0f1c" />
   <title>Copper Rod Conversion</title>
-  <!-- Premium, mobile-first single-file web app (no libraries) -->
   <style>
     :root{
-      --bg:#0b0f1c;           /* deep slate */
-      --bg2:#0d1326;          /* card backdrop */
-      --txt:#e7edf5;          /* high contrast */
-      --muted:#9db1c7;
-      --line:rgba(255,255,255,.08);
-      --accent:#6be3ff;       /* cyan */
-      --accent-2:#7aa2ff;     /* sky-indigo */
-      --good:#32d49d;         /* emerald */
-      --bad:#ff6480;          /* rose */
-      --shadow: 0 20px 60px rgba(0,0,0,.45);
-      --radius: 18px;
+      --bg:#0b0f1c; --bg2:#0d1326; --txt:#e7edf5; --muted:#9db1c7; --line:rgba(255,255,255,.08);
+      --accent:#6be3ff; --accent-2:#7aa2ff; --good:#32d49d; --bad:#ff6480;
+      --shadow: 0 20px 60px rgba(0,0,0,.45); --radius: 18px;
     }
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
     html,body{height:100%}
@@ -33,8 +24,6 @@
     .wrap{max-width:860px; margin:0 auto; padding:20px clamp(16px, 4vw, 28px) 100px;}
 
     header{display:flex; align-items:center; justify-content:space-between; gap:12px; margin:8px 0 16px}
-    .brand{}
-    .logo{}
     h1{font-size:clamp(16px, 3.5vw, 22px); line-height:1.1; margin:0; text-align:center}
     .sub{color:var(--muted); font-size:13px; opacity:.95}
 
@@ -44,12 +33,10 @@
     .grid{display:grid; grid-template-columns:repeat(12, 1fr); gap:14px}
     .col-12{grid-column:span 12}
     .col-6{grid-column:span 6}
-    .col-4{grid-column:span 4}
 
     @media (max-width:760px){
       .grid{grid-template-columns:repeat(6, 1fr)}
       .col-6{grid-column:span 6}
-      .col-4{grid-column:span 6}
     }
 
     label{display:block; font-size:12px; color:var(--muted); margin:0 0 6px 2px}
@@ -65,58 +52,34 @@
     .btn.primary{background:linear-gradient(135deg, var(--accent), var(--accent-2)); color:#06121a}
     .btn.ghost{background:transparent; color:var(--txt); border:1px solid var(--line)}
 
-    .result{position:fixed; left:0; right:0; bottom:0; padding:14px 16px calc(env(safe-area-inset-bottom) + 14px); background:rgba(10,13,24,.7); backdrop-filter: blur(12px); border-top:1px solid var(--line)}
+    .result{position:fixed; left:0; right:0; bottom:0; padding:14px 16px calc(env(safe-area-inset-bottom) + 14px); background:rgba(10,13,24,.7); backdrop-filter: blur(12px); border-top:1px solid var(--line);
+      box-shadow:0 -10px 30px rgba(0,0,0,.4), 0 0 0 1px var(--line), 0 0 16px rgba(122,162,255,.12) inset}
     .result .inner{max-width:860px; margin:0 auto; display:grid; grid-template-columns:1fr auto; align-items:center; gap:12px}
-    .headline{font-size:clamp(18px, 4.5vw, 22px); font-weight:800}
+    .headline{font-size:clamp(24px,6vw,36px); font-weight:900}
     .meta{display:flex; gap:10px; flex-wrap:wrap; color:var(--muted); font-size:12px}
 
     .kv{background:var(--bg2); padding:10px 12px; border:1px solid var(--line); border-radius:12px}
-    .ok{color:var(--good)}
-    .err{color:var(--bad)}
+    .ok{color:var(--good)} .err{color:var(--bad)}
     small.helper{color:var(--muted); display:block; margin-top:8px}
-  .line-anim{height:3px; border-radius:2px; margin:2px 0 14px; background:linear-gradient(90deg, rgba(107,227,255,.0) 0%, rgba(107,227,255,.9) 30%, rgba(122,162,255,.9) 70%, rgba(122,162,255,.0) 100%); background-size:200% 100%; animation: sweep 2.6s linear infinite}
-@keyframes sweep{0%{background-position:200% 0}100%{background-position:-200% 0}}
-.watermark{position:fixed; right:12px; bottom:12px; z-index:9999; pointer-events:none; user-select:none; font-weight:800; letter-spacing:.6px; font-size:12px; padding:6px 10px; border-radius:999px; color:#a7bed6; background:linear-gradient(135deg, rgba(107,227,255,.18), rgba(122,162,255,.18)); border:1px solid rgba(255,255,255,.12); box-shadow:0 10px 30px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.08); text-transform:uppercase}
 
-/* subtle animated glow around sticky result */
-.result{box-shadow:0 -10px 30px rgba(0,0,0,.4), 0 0 0 1px var(--line), 0 0 16px rgba(122,162,255,.12) inset}
-.header-simple{display:flex; align-items:center; justify-content:center; position:relative; min-height:56px}
-.app-title{font-size:clamp(16px,3.5vw,22px); font-weight:800; letter-spacing:.2px}
-.brand-logo{position:absolute; right:8px; top:8px; width:90px; height:auto; object-fit:contain; opacity:.95}
+    /* hide any leftover header line animation */
+    .line-anim{display:none !important}
 
-.metrics{display:none}
+    /* flash animation when dropdown/select changes */
+    @keyframes flashPulse{0%{transform:scale(1); box-shadow:0 0 0 0 rgba(122,162,255,.0)}50%{transform:scale(1.01); box-shadow:0 0 0 8px rgba(122,162,255,.12)}100%{transform:scale(1); box-shadow:0 0 0 0 rgba(122,162,255,.0)}}
+    .flash{animation: flashPulse .6s ease-out}
 
-/* hide kg/m line visually */
-.kv.kgpm{display:none}
-
-/* Bigger result text */
-.headline{font-size:clamp(24px,6vw,36px); font-weight:900}
-
-/* History (last) */
-.history{margin-top:10px; color:var(--muted); font-size:12px}
-.rr-badge{margin:16px auto 0; padding:10px 16px; max-width:320px; text-align:center; font-weight:800; letter-spacing:.6px; font-size:13px; color:#cfe3f7; background:linear-gradient(135deg, rgba(107,227,255,.18), rgba(122,162,255,.18)); border:1px solid rgba(255,255,255,.12); border-radius:12px; box-shadow:0 8px 24px rgba(0,0,0,.35)}
-
-/* hide any leftover header line animation */
-.line-anim{display:none !important}
-
-/* flash animation when dropdown/select changes */
-@keyframes flashPulse{0%{transform:scale(1); box-shadow:0 0 0 0 rgba(122,162,255,.0)}50%{transform:scale(1.01); box-shadow:0 0 0 8px rgba(122,162,255,.12)}100%{transform:scale(1); box-shadow:0 0 0 0 rgba(122,162,255,.0)}}
-.flash{animation: flashPulse .6s ease-out}
-</style>
+    /* HIDE REQUESTED ITEMS */
+    .kv-area{display:none}          /* Area: — mm² (card) */
+    .kv.kgpm{display:none}          /* Mass per meter: — kg/m (card) */
+    .pure-note{display:none}        /* "Pure copper assumed..." note */
+  </style>
 </head>
 <body>
   <div class="wrap">
     <header class="header-simple">
       <h1 class="app-title">Copper Rod Conversion</h1>
-      <!-- Top-right company logo. Replace src with your file path on GitHub Pages (e.g., ./rr-imperial-logo.png) -->
-      
     </header>
-
-    
-
-    
-
-    
 
     <section class="card panel" aria-label="Inputs">
       <div class="grid">
@@ -177,19 +140,21 @@
     <section class="card panel" style="margin-top:14px" aria-label="Details">
       <div class="grid">
         <div class="col-6">
-          <div class="kv">Area: <strong id="area">—</strong> mm²</div>
+          <!-- Hidden via .kv-area CSS but kept to avoid JS null refs -->
+          <div class="kv kv-area">Area: <strong id="area">—</strong> mm²</div>
         </div>
         <div class="col-6">
+          <!-- Already hidden via .kv.kgpm CSS -->
           <div class="kv kgpm">Mass per meter: <strong id="kgpm">—</strong> kg/m</div>
         </div>
       </div>
-      <small class="helper">Pure copper assumed (8.96 g/cm³). Solid sections only. Results rounded to 2 decimals.</small>
+      <!-- Removed note: Pure copper assumed ... -->
       <div class="history" id="historyLast"></div>
       <small class="helper" id="rrNote">RR OPERATIONS TEAM</small>
     </section>
   </div>
 
-  <!-- Sticky result bar for mobile friendliness -->
+  <!-- Sticky result bar -->
   <div class="result" role="status" aria-live="polite">
     <div class="inner">
       <div>
@@ -237,6 +202,7 @@
     const resultBar = document.querySelector('.result .inner');
 
     const KEY = 'cu_rod_conversion_v4';
+    const KEY_LAST = 'cu_rod_conversion_last';
 
     function setType(type){
       const isStrip = type === 'Strip';
@@ -283,7 +249,7 @@
         const d = num(dia.value);
         if(!(d>0)) return 0;
         return Math.PI * d * d / 4;
-      } else { // RM: area entered directly in mm²
+      } else { // RM
         const a = num(areaRM.value);
         return a>0 ? a : 0;
       }
@@ -292,10 +258,10 @@
     function compute(){
       status.textContent = '';
       const a = computeArea();
-      areaEl.textContent = a ? a.toFixed(2) : '—';
+      if(areaEl) areaEl.textContent = a ? a.toFixed(2) : '—';
 
       if(a <= 0){
-        kgpmEl.textContent = '—';
+        if(kgpmEl) kgpmEl.textContent = '—';
         resHead.textContent = 'Result: —';
         resSub.innerHTML = '<span class="err">Cross-section area is zero — enter required dimensions.</span>';
         persist();
@@ -303,7 +269,7 @@
       }
 
       const kgpm = DENS_KG_PER_M_PER_MM2 * a;
-      kgpmEl.textContent = kgpm.toFixed(4);
+      if(kgpmEl) kgpmEl.textContent = kgpm.toFixed(4);
 
       const g = num(given.value);
       if(!(g>=0)){
@@ -336,8 +302,11 @@
       const dims = type === 'Strip'
         ? `W = ${Number(width.value||0)} mm · T = ${Number(thk.value||0)} mm`
         : (type === 'Rod' ? `D = ${Number(dia.value||0)} mm` : `Area = ${Number(areaRM.value||0)} mm²`);
+
       const glabel = givenLabel.textContent;
-      resSub.innerHTML = `${glabel}: <strong>${Number(g)}</strong> · ${dims} · Area <strong>${a.toFixed(2)} mm²</strong> · kg/m <strong>${kgpm.toFixed(4)}</strong>`;
+
+      // Removed: trailing "Area · kg/m" details from subtitle
+      resSub.innerHTML = `${glabel}: <strong>${Number(g)}</strong> · ${dims}`;
 
       persist();
     }
@@ -381,7 +350,6 @@
 
     function swap(){
       const m = mode.value;
-      // Swap only within sensible pairs
       if(m === 'Kg to Meter'){ mode.value = 'Meter to Kg'; }
       else if(m === 'Meter to Kg'){ mode.value = 'Kg to Meter'; }
       else if(m === 'Kg to Ft'){ mode.value = 'Ft to Kg'; }
@@ -398,11 +366,8 @@
     ;[width, thk, dia, areaRM, given].forEach(el=> el.addEventListener('input', compute));
     btnReset.addEventListener('click', resetAll);
     btnCopy.addEventListener('click', ()=>{
-      // Build a clean one-line summary and handle special characters safely
       const subText = (resSub.innerText || resSub.textContent || '')
-        .replace(/[\n\r]+/g, ' ')     // normalize line breaks
-        .replace(/\s+/g, ' ')          // collapse whitespace
-        .trim();
+        .replace(/[\n\r]+/g, ' ').replace(/\s+/g, ' ').trim();
       const txt = `${resHead.textContent} | ${subText}`;
 
       if(navigator.clipboard && navigator.clipboard.writeText){
@@ -425,13 +390,13 @@
       }catch(e){}
     }
 
-    // History saver
     function saveHistoryFromDOM(){
       try{
         const head = resHead.textContent || '';
-        if(!head || head.includes('—')) return; // ignore placeholder
+        if(!head || head.includes('—')) return;
         const subText = (resSub.innerText || resSub.textContent || '').replace(/[\n\r]+/g,' ').replace(/[\s]+/g,' ').trim();
         const summary = `${head} — ${subText}`;
+        const historyLast = document.getElementById('historyLast');
         if(historyLast) historyLast.textContent = `Last: ${summary}`;
         localStorage.setItem(KEY_LAST, summary);
       }catch(e){}
@@ -442,7 +407,6 @@
     function triggerFlash(){
       if(!resultBar) return;
       resultBar.classList.remove('flash');
-      // force reflow to restart animation
       void resultBar.offsetWidth;
       resultBar.classList.add('flash');
     }
@@ -450,66 +414,8 @@
     // Init
     hydrate();
     updateGivenUI();
-    // no demo defaults; keep inputs empty
     compute();
-
-    // -----------------------
-    // Lightweight Test Suite
-    // -----------------------
-    function areaStripMM2(w,t){ return w>0 && t>0 ? (w*t) : 0; }
-    function areaRodMM2(d){ return d>0 ? (Math.PI*d*d/4) : 0; }
-    function kgPerM(area){ return area * DENS_KG_PER_M_PER_MM2; }
-    function convert(mode, area, given){
-      const k = kgPerM(area);
-      switch(mode){
-        case 'Kg to Meter': return given / k;
-        case 'Kg to Ft':    return given / (k * FT_TO_M);
-        case 'Meter to Kg': return given * k;
-        case 'Ft to Kg':    return given * FT_TO_M * k;
-      }
-      return NaN;
-    }
-    function close(a,b,eps=0.05){ return Math.abs(a-b) <= eps; }
-
-    (function runTests(){
-      const tests = [];
-      // Existing tests
-      {
-        const area = areaRodMM2(12);
-        const out = convert('Kg to Meter', area, 500);
-        tests.push({name:'Rod D12: 500 kg → m', pass: close(out, 493.41, 0.1), got: out});
-      }
-      {
-        const area = areaStripMM2(10,3);
-        const out = convert('Kg to Meter', area, 500);
-        tests.push({name:'Strip 10×3: 500 kg → m', pass: close(out, 1860.12, 0.2), got: out});
-      }
-      {
-        const area = areaStripMM2(20,2);
-        const out = convert('Meter to Kg', area, 100);
-        tests.push({name:'Strip 20×2: 100 m → kg', pass: close(out, 35.84, 0.02), got: out});
-      }
-      {
-        const area = areaRodMM2(8);
-        const out = convert('Ft to Kg', area, 500);
-        tests.push({name:'Rod D8: 500 ft → kg', pass: close(out, 68.67, 0.1), got: out});
-      }
-      // New RM test: Area=1.3 mm², 100 m → 1.1648 kg
-      {
-        const area = 1.3;
-        const out = convert('Meter to Kg', area, 100);
-        tests.push({name:'RM area 1.3: 100 m → kg', pass: close(out, 1.1648, 0.001), got: out});
-      }
-
-      const allPass = tests.every(t=>t.pass);
-      console.groupCollapsed(`Cu Rod Conversion — Tests ${allPass? '✅ PASS':'❌ FAIL'}`);
-      tests.forEach(t=> console.log(`${t.pass?'✅':'❌'} ${t.name}:`, t.got));
-      console.groupEnd();
-    })();
-
   })();
   </script>
-  <!-- Always-visible watermark badge -->
-  
 </body>
 </html>
