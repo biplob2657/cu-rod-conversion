@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b0f1c" />
+  <title>Copper Rod Conversion</title>
+  <!-- Premium, mobile-first single-file web app (no libraries) -->
+  <style>
+    :root{
+      --bg:#0b0f1c;           /* deep slate */
+      --bg2:#0d1326;          /* card backdrop */
+      --txt:#e7edf5;          /* high contrast */
+      --muted:#9db1c7;
+      --line:rgba(255,255,255,.08);
+      --accent:#6be3ff;       /* cyan */
+      --accent-2:#7aa2ff;     /* sky-indigo */
+      --good:#32d49d;         /* emerald */
+      --bad:#ff6480;          /* rose */
+      --shadow: 0 20px 60px rgba(0,0,0,.45);
+      --radius: 18px;
+    }
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{height:100%}
+    body{
+      margin:0; font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+      color:var(--txt);
+      background:
+        radial-gradient(1200px 700px at 120% -20%, rgba(107,227,255,.18), transparent 60%),
+        radial-gradient(900px 600px at -10% 10%, rgba(122,162,255,.16), transparent 60%),
+        linear-gradient(180deg, #0b0f1c, #0b1120 50%, #0b0f1c);
+    }
+    .wrap{max-width:860px; margin:0 auto; padding:20px clamp(16px, 4vw, 28px) 100px;}
+
+    header{display:flex; align-items:center; justify-content:space-between; gap:12px; margin:8px 0 16px}
+    .brand{display:flex; align-items:center; justify-content:center; gap:12px}
+    .logo{
+      width:42px; height:42px; border-radius:12px; display:grid; place-items:center;
+      background:linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 8px 24px rgba(123,162,255,.35);
+      color:#001014; font-weight:800;
+    }
+    h1{font-size:clamp(20px, 4.5vw, 28px); line-height:1.1; margin:0; text-align:center}
+    .sub{color:var(--muted); font-size:13px; opacity:.95}
+
+    .card{background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow)}
+    .panel{ padding:16px; }
+
+    .grid{display:grid; grid-template-columns:repeat(12, 1fr); gap:14px}
+    .col-12{grid-column:span 12}
+    .col-6{grid-column:span 6}
+    .col-4{grid-column:span 4}
+
+    @media (max-width:760px){
+      .grid{grid-template-columns:repeat(6, 1fr)}
+      .col-6{grid-column:span 6}
+      .col-4{grid-column:span 6}
+    }
+
+    label{display:block; font-size:12px; color:var(--muted); margin:0 0 6px 2px}
+    select, input{width:100%; padding:14px 14px; border-radius:14px; outline:none; border:1px solid var(--line); background:var(--bg2); color:#fff; font-size:16px; box-shadow: inset 0 1px 0 rgba(255,255,255,.04)}
+    input::placeholder{color:#7a8aa3}
+
+    .seg{display:flex; background:var(--bg2); border:1px solid var(--line); padding:6px; border-radius:14px}
+    .seg button{flex:1; border:0; background:transparent; color:var(--muted); padding:10px 12px; border-radius:10px; font-weight:600; font-size:14px; cursor:pointer}
+    .seg button.active{background:linear-gradient(135deg, rgba(107,227,255,.18), rgba(122,162,255,.18)); color:#fff}
+
+    .actions{display:flex; gap:10px; align-items:center; flex-wrap:wrap}
+    .btn{border:0; padding:12px 16px; border-radius:14px; font-weight:700; cursor:pointer}
+    .btn.primary{background:linear-gradient(135deg, var(--accent), var(--accent-2)); color:#06121a}
+    .btn.ghost{background:transparent; color:var(--txt); border:1px solid var(--line)}
+
+    .result{position:fixed; left:0; right:0; bottom:0; padding:14px 16px calc(env(safe-area-inset-bottom) + 14px); background:rgba(10,13,24,.7); backdrop-filter: blur(12px); border-top:1px solid var(--line)}
+    .result .inner{max-width:860px; margin:0 auto; display:grid; grid-template-columns:1fr auto; align-items:center; gap:12px}
+    .headline{font-size:clamp(18px, 4.5vw, 22px); font-weight:800}
+    .meta{display:flex; gap:10px; flex-wrap:wrap; color:var(--muted); font-size:12px}
+
+    .kv{background:var(--bg2); padding:10px 12px; border:1px solid var(--line); border-radius:12px}
+    .ok{color:var(--good)}
+    .err{color:var(--bad)}
+    small.helper{color:var(--muted); display:block; margin-top:8px}
+  .line-anim{height:3px; border-radius:2px; margin:2px 0 14px; background:linear-gradient(90deg, rgba(107,227,255,.0) 0%, rgba(107,227,255,.9) 30%, rgba(122,162,255,.9) 70%, rgba(122,162,255,.0) 100%); background-size:200% 100%; animation: sweep 2.6s linear infinite}
+@keyframes sweep{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.watermark{position:fixed; right:12px; bottom:12px; z-index:9999; pointer-events:none; user-select:none; font-weight:800; letter-spacing:.6px; font-size:12px; padding:6px 10px; border-radius:999px; color:#a7bed6; background:linear-gradient(135deg, rgba(107,227,255,.18), rgba(122,162,255,.18)); border:1px solid rgba(255,255,255,.12); box-shadow:0 10px 30px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.08); text-transform:uppercase}
+
+/* subtle animated glow around sticky result */
+.result{box-shadow:0 -10px 30px rgba(0,0,0,.4), 0 0 0 1px var(--line), 0 0 16px rgba(122,162,255,.12) inset}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="centered">
+      <div class="brand column">
+        <div class="logo" aria-hidden="true">Cu</div>
+        <h1 class="title-center">Copper Rod Conversion</h1>
+        <div class="metrics" aria-label="constants">
+          <div>ρ = 8.96 g/cm³</div>
+          <div>1 ft = 0.3048 m</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Animated accent line -->
+    <div class="line-anim" aria-hidden="true"></div>
+
+    <!-- Animated accent line -->
+    <div class="line-anim" aria-hidden="true"></div>
+
+    <section class="card panel" aria-label="Inputs">
+      <div class="grid">
+        <div class="col-12">
+          <label for="type">Select Type</label>
+          <div class="seg" role="tablist" aria-label="Product Type">
+            <button id="tStrip" class="active" role="tab" aria-selected="true">Strip</button>
+            <button id="tRod" role="tab" aria-selected="false">Bare Rod / Wire</button>
+            <button id="tRM" role="tab" aria-selected="false">Bare Cable (RM)</button>
+          </div>
+        </div>
+        <div class="col-12">
+          <label for="mode">Select Conversion</label>
+          <select id="mode" aria-label="Conversion Mode">
+            <option>Kg to Meter</option>
+            <option>Kg to Ft</option>
+            <option>Meter to Kg</option>
+            <option>Ft to Kg</option>
+          </select>
+        </div>
+
+        <!-- Strip fields -->
+        <div class="col-6 only-strip">
+          <label for="width">Given Width (mm)</label>
+          <input id="width" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g., 10" />
+        </div>
+        <div class="col-6 only-strip">
+          <label for="thickness">Given Thickness (mm)</label>
+          <input id="thickness" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g., 3" />
+        </div>
+
+        <!-- Rod field -->
+        <div class="col-6 only-rod" style="display:none">
+          <label for="diameter">Given Diameter (mm)</label>
+          <input id="diameter" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g., 12" />
+        </div>
+
+        <!-- RM field -->
+        <div class="col-6 only-rm" style="display:none">
+          <label for="areaRM">Cable (RM) Size (mm²)</label>
+          <input id="areaRM" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g., 1.3" />
+        </div>
+
+        <div class="col-12">
+          <label id="given-label" for="given">Given Kg</label>
+          <input id="given" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g., 500" />
+          <small class="helper">Label changes automatically by conversion mode (Kg, Meter, Ft).</small>
+        </div>
+
+        <div class="col-12 actions">
+          <button id="reset" class="btn ghost" type="button">Reset</button>
+          <button id="copy" class="btn primary" type="button" title="Copy result">Copy Result</button>
+          <span id="status" class="sub"></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="card panel" style="margin-top:14px" aria-label="Details">
+      <div class="grid">
+        <div class="col-6">
+          <div class="kv">Area: <strong id="area">—</strong> mm²</div>
+        </div>
+        <div class="col-6">
+          <div class="kv">Mass per meter: <strong id="kgpm">—</strong> kg/m</div>
+        </div>
+      </div>
+      <small class="helper">Pure copper assumed (8.96 g/cm³). Solid sections only. Results rounded to 2 decimals.</small>
+    </section>
+  </div>
+
+  <!-- Sticky result bar for mobile friendliness -->
+  <div class="result" role="status" aria-live="polite">
+    <div class="inner">
+      <div>
+        <div class="headline" id="result-head">Result: —</div>
+        <div class="meta" id="result-sub">Enter dimensions & a value to calculate.</div>
+      </div>
+      <div class="actions">
+        <button id="quickSwap" class="btn ghost" type="button" title="Swap Kg⇄Length where applicable">Swap</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  (function(){
+    const FT_TO_M = 0.3048;
+    const DENS_KG_PER_M_PER_MM2 = 0.00896; // copper: 8.96 g/cm³
+
+    // Elements
+    const tStrip = document.getElementById('tStrip');
+    const tRod = document.getElementById('tRod');
+    const tRM = document.getElementById('tRM');
+    const mode = document.getElementById('mode');
+
+    const width = document.getElementById('width');
+    const thk = document.getElementById('thickness');
+    const dia = document.getElementById('diameter');
+    const areaRM = document.getElementById('areaRM');
+
+    const given = document.getElementById('given');
+    const givenLabel = document.getElementById('given-label');
+
+    const areaEl = document.getElementById('area');
+    const kgpmEl = document.getElementById('kgpm');
+    const resHead = document.getElementById('result-head');
+    const resSub = document.getElementById('result-sub');
+    const status = document.getElementById('status');
+
+    const stripOnly = document.querySelectorAll('.only-strip');
+    const rodOnly = document.querySelectorAll('.only-rod');
+    const rmOnly = document.querySelectorAll('.only-rm');
+
+    const btnReset = document.getElementById('reset');
+    const btnCopy = document.getElementById('copy');
+    const btnSwap = document.getElementById('quickSwap');
+
+    const KEY = 'cu_rod_conversion_v3';
+
+    function setType(type){
+      const isStrip = type === 'Strip';
+      const isRod = type === 'Rod';
+      const isRM = type === 'RM';
+
+      tStrip.classList.toggle('active', isStrip); tStrip.setAttribute('aria-selected', isStrip);
+      tRod.classList.toggle('active', isRod);     tRod.setAttribute('aria-selected', isRod);
+      tRM.classList.toggle('active', isRM);       tRM.setAttribute('aria-selected', isRM);
+
+      stripOnly.forEach(n=> n.style.display = isStrip ? 'block' : 'none');
+      rodOnly.forEach(n=> n.style.display   = isRod   ? 'block' : 'none');
+      rmOnly.forEach(n=> n.style.display    = isRM    ? 'block' : 'none');
+
+      compute();
+    }
+
+    function currentType(){
+      if(tStrip.classList.contains('active')) return 'Strip';
+      if(tRod.classList.contains('active')) return 'Rod';
+      if(tRM.classList.contains('active')) return 'RM';
+      return 'Strip';
+    }
+
+    function updateGivenUI(){
+      const m = mode.value;
+      let label = 'Given'; let ph = '';
+      if(m === 'Meter to Kg'){ label = 'Given Meter'; ph = 'e.g., 100'; }
+      else if(m === 'Ft to Kg'){ label = 'Given Ft'; ph = 'e.g., 500'; }
+      else { label = 'Given Kg'; ph = 'e.g., 500'; }
+      givenLabel.textContent = label;
+      given.placeholder = ph;
+    }
+
+    function num(v){ const n = Number(v); return Number.isFinite(n) ? n : NaN; }
+
+    function computeArea(){
+      const type = currentType();
+      if(type === 'Strip'){
+        const w = num(width.value), t = num(thk.value);
+        if(!(w>0) || !(t>0)) return 0;
+        return w*t;
+      } else if(type === 'Rod'){
+        const d = num(dia.value);
+        if(!(d>0)) return 0;
+        return Math.PI * d * d / 4;
+      } else { // RM: area entered directly in mm²
+        const a = num(areaRM.value);
+        return a>0 ? a : 0;
+      }
+    }
+
+    function compute(){
+      status.textContent = '';
+      const a = computeArea();
+      areaEl.textContent = a ? a.toFixed(2) : '—';
+
+      if(a <= 0){
+        kgpmEl.textContent = '—';
+        resHead.textContent = 'Result: —';
+        resSub.innerHTML = '<span class="err">Cross-section area is zero — enter required dimensions.</span>';
+        persist();
+        return;
+      }
+
+      const kgpm = DENS_KG_PER_M_PER_MM2 * a;
+      kgpmEl.textContent = kgpm.toFixed(4);
+
+      const g = num(given.value);
+      if(!(g>=0)){
+        resHead.textContent = 'Result: —';
+        resSub.innerHTML = 'Enter a non-negative value in the Given field.';
+        persist();
+        return;
+      }
+
+      const m = mode.value;
+      let out = NaN, unit = '';
+      switch(m){
+        case 'Meter to Kg': out = g * kgpm; unit = 'kg'; break;
+        case 'Ft to Kg': out = g * FT_TO_M * kgpm; unit = 'kg'; break;
+        case 'Kg to Meter': out = g / kgpm; unit = 'm'; break;
+        case 'Kg to Ft': out = g / (FT_TO_M * kgpm); unit = 'ft'; break;
+      }
+
+      if(!Number.isFinite(out)){
+        resHead.textContent = 'Result: —';
+        resSub.textContent = 'Cannot compute result — check inputs.';
+        persist();
+        return;
+      }
+
+      const main = Number(out.toFixed(2)).toLocaleString();
+      resHead.textContent = `Result: ${main} ${unit}`;
+
+      const type = currentType();
+      const dims = type === 'Strip'
+        ? `W = ${Number(width.value||0)} mm · T = ${Number(thk.value||0)} mm`
+        : (type === 'Rod' ? `D = ${Number(dia.value||0)} mm` : `Area = ${Number(areaRM.value||0)} mm²`);
+      const glabel = givenLabel.textContent;
+      resSub.innerHTML = `${glabel}: <strong>${Number(g)}</strong> · ${dims} · Area <strong>${a.toFixed(2)} mm²</strong> · kg/m <strong>${kgpm.toFixed(4)}</strong>`;
+
+      persist();
+    }
+
+    function resetAll(){
+      setType('Strip');
+      mode.value = 'Kg to Meter';
+      width.value = thk.value = dia.value = areaRM.value = given.value = '';
+      updateGivenUI();
+      compute();
+      status.textContent = 'Cleared inputs.';
+      persist();
+    }
+
+    function persist(){
+      const data = {
+        type: currentType(),
+        mode: mode.value,
+        width: width.value,
+        thk: thk.value,
+        dia: dia.value,
+        areaRM: areaRM.value,
+        given: given.value
+      };
+      try{ localStorage.setItem(KEY, JSON.stringify(data)); }catch(e){}
+    }
+    function hydrate(){
+      try{
+        const raw = localStorage.getItem(KEY);
+        if(!raw) return;
+        const d = JSON.parse(raw);
+        setType(d.type === 'Rod' ? 'Rod' : (d.type === 'RM' ? 'RM' : 'Strip'));
+        mode.value = d.mode || 'Kg to Meter';
+        width.value = d.width || '';
+        thk.value = d.thk || '';
+        dia.value = d.dia || '';
+        areaRM.value = d.areaRM || '';
+        given.value = d.given || '';
+      }catch(e){}
+    }
+
+    function swap(){
+      const m = mode.value;
+      // Swap only within sensible pairs
+      if(m === 'Kg to Meter'){ mode.value = 'Meter to Kg'; }
+      else if(m === 'Meter to Kg'){ mode.value = 'Kg to Meter'; }
+      else if(m === 'Kg to Ft'){ mode.value = 'Ft to Kg'; }
+      else if(m === 'Ft to Kg'){ mode.value = 'Kg to Ft'; }
+      updateGivenUI();
+      compute();
+    }
+
+    // Events
+    tStrip.addEventListener('click', ()=> setType('Strip'));
+    tRod.addEventListener('click', ()=> setType('Rod'));
+    tRM.addEventListener('click',  ()=> setType('RM'));
+    mode.addEventListener('change', ()=>{ updateGivenUI(); compute(); });
+    ;[width, thk, dia, areaRM, given].forEach(el=> el.addEventListener('input', compute));
+    btnReset.addEventListener('click', resetAll);
+    btnCopy.addEventListener('click', ()=>{
+      // Build a clean one-line summary and handle special characters safely
+      const subText = (resSub.innerText || resSub.textContent || '')
+        .replace(/[\n\r]+/g, ' ')     // normalize line breaks
+        .replace(/\s+/g, ' ')          // collapse whitespace
+        .trim();
+      const txt = `${resHead.textContent} | ${subText}`;
+
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(txt)
+          .then(()=> status.textContent='Copied')
+          .catch(()=> { fallbackCopy(txt); status.textContent='Copy failed'; });
+      } else {
+        fallbackCopy(txt);
+      }
+    });
+    btnSwap.addEventListener('click', swap);
+
+    function fallbackCopy(text){
+      try{
+        const ta = document.createElement('textarea');
+        ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
+        document.body.appendChild(ta); ta.focus(); ta.select();
+        document.execCommand('copy');
+        ta.remove();
+      }catch(e){}
+    }
+
+    // Init
+    hydrate();
+    updateGivenUI();
+    if(!given.value){
+      // friendly defaults for demo: your case
+      setType('RM');
+      areaRM.value = '1.3';
+      mode.value = 'Meter to Kg';
+      given.value = '100';
+    }
+    compute();
+
+    // -----------------------
+    // Lightweight Test Suite
+    // -----------------------
+    function areaStripMM2(w,t){ return w>0 && t>0 ? (w*t) : 0; }
+    function areaRodMM2(d){ return d>0 ? (Math.PI*d*d/4) : 0; }
+    function kgPerM(area){ return area * DENS_KG_PER_M_PER_MM2; }
+    function convert(mode, area, given){
+      const k = kgPerM(area);
+      switch(mode){
+        case 'Kg to Meter': return given / k;
+        case 'Kg to Ft':    return given / (k * FT_TO_M);
+        case 'Meter to Kg': return given * k;
+        case 'Ft to Kg':    return given * FT_TO_M * k;
+      }
+      return NaN;
+    }
+    function close(a,b,eps=0.05){ return Math.abs(a-b) <= eps; }
+
+    (function runTests(){
+      const tests = [];
+      // Existing tests
+      {
+        const area = areaRodMM2(12);
+        const out = convert('Kg to Meter', area, 500);
+        tests.push({name:'Rod D12: 500 kg → m', pass: close(out, 493.41, 0.1), got: out});
+      }
+      {
+        const area = areaStripMM2(10,3);
+        const out = convert('Kg to Meter', area, 500);
+        tests.push({name:'Strip 10×3: 500 kg → m', pass: close(out, 1860.12, 0.2), got: out});
+      }
+      {
+        const area = areaStripMM2(20,2);
+        const out = convert('Meter to Kg', area, 100);
+        tests.push({name:'Strip 20×2: 100 m → kg', pass: close(out, 35.84, 0.02), got: out});
+      }
+      {
+        const area = areaRodMM2(8);
+        const out = convert('Ft to Kg', area, 500);
+        tests.push({name:'Rod D8: 500 ft → kg', pass: close(out, 68.67, 0.1), got: out});
+      }
+      // New RM test: Area=1.3 mm², 100 m → 1.1648 kg
+      {
+        const area = 1.3;
+        const out = convert('Meter to Kg', area, 100);
+        tests.push({name:'RM area 1.3: 100 m → kg', pass: close(out, 1.1648, 0.001), got: out});
+      }
+
+      const allPass = tests.every(t=>t.pass);
+      console.groupCollapsed(`Cu Rod Conversion — Tests ${allPass? '✅ PASS':'❌ FAIL'}`);
+      tests.forEach(t=> console.log(`${t.pass?'✅':'❌'} ${t.name}:`, t.got));
+      console.groupEnd();
+    })();
+
+  })();
+  </script>
+  <!-- Always-visible watermark badge -->
+  <div class="watermark" aria-hidden="true" title="RR Operations team">RR Operations team</div>
+</body>
+</html>
