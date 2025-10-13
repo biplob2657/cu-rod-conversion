@@ -33,14 +33,9 @@
     .wrap{max-width:860px; margin:0 auto; padding:20px clamp(16px, 4vw, 28px) 100px;}
 
     header{display:flex; align-items:center; justify-content:space-between; gap:12px; margin:8px 0 16px}
-    .brand{display:flex; align-items:center; justify-content:center; gap:12px}
-    .logo{
-      width:42px; height:42px; border-radius:12px; display:grid; place-items:center;
-      background:linear-gradient(135deg, var(--accent), var(--accent-2));
-      box-shadow: 0 8px 24px rgba(123,162,255,.35);
-      color:#001014; font-weight:800;
-    }
-    h1{font-size:clamp(20px, 4.5vw, 28px); line-height:1.1; margin:0; text-align:center}
+    .brand{}
+    .logo{}
+    h1{font-size:clamp(16px, 3.5vw, 22px); line-height:1.1; margin:0; text-align:center}
     .sub{color:var(--muted); font-size:13px; opacity:.95}
 
     .card{background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow)}
@@ -85,26 +80,43 @@
 
 /* subtle animated glow around sticky result */
 .result{box-shadow:0 -10px 30px rgba(0,0,0,.4), 0 0 0 1px var(--line), 0 0 16px rgba(122,162,255,.12) inset}
+.header-simple{display:flex; align-items:center; justify-content:center; position:relative; min-height:56px}
+.app-title{font-size:clamp(16px,3.5vw,22px); font-weight:800; letter-spacing:.2px}
+.brand-logo{position:absolute; right:8px; top:8px; width:90px; height:auto; object-fit:contain; opacity:.95}
+
+.metrics{display:none}
+
+/* hide kg/m line visually */
+.kv.kgpm{display:none}
+
+/* Bigger result text */
+.headline{font-size:clamp(24px,6vw,36px); font-weight:900}
+
+/* History (last) */
+.history{margin-top:10px; color:var(--muted); font-size:12px}
+.rr-badge{margin:16px auto 0; padding:10px 16px; max-width:320px; text-align:center; font-weight:800; letter-spacing:.6px; font-size:13px; color:#cfe3f7; background:linear-gradient(135deg, rgba(107,227,255,.18), rgba(122,162,255,.18)); border:1px solid rgba(255,255,255,.12); border-radius:12px; box-shadow:0 8px 24px rgba(0,0,0,.35)}
+
+/* hide any leftover header line animation */
+.line-anim{display:none !important}
+
+/* flash animation when dropdown/select changes */
+@keyframes flashPulse{0%{transform:scale(1); box-shadow:0 0 0 0 rgba(122,162,255,.0)}50%{transform:scale(1.01); box-shadow:0 0 0 8px rgba(122,162,255,.12)}100%{transform:scale(1); box-shadow:0 0 0 0 rgba(122,162,255,.0)}}
+.flash{animation: flashPulse .6s ease-out}
 </style>
 </head>
 <body>
   <div class="wrap">
-    <header class="centered">
-      <div class="brand column">
-        <div class="logo" aria-hidden="true">Cu</div>
-        <h1 class="title-center">Copper Rod Conversion</h1>
-        <div class="metrics" aria-label="constants">
-          <div>ρ = 8.96 g/cm³</div>
-          <div>1 ft = 0.3048 m</div>
-        </div>
-      </div>
+    <header class="header-simple">
+      <h1 class="app-title">Copper Rod Conversion</h1>
+      <!-- Top-right company logo. Replace src with your file path on GitHub Pages (e.g., ./rr-imperial-logo.png) -->
+      
     </header>
 
-    <!-- Animated accent line -->
-    <div class="line-anim" aria-hidden="true"></div>
+    
 
-    <!-- Animated accent line -->
-    <div class="line-anim" aria-hidden="true"></div>
+    
+
+    
 
     <section class="card panel" aria-label="Inputs">
       <div class="grid">
@@ -168,10 +180,12 @@
           <div class="kv">Area: <strong id="area">—</strong> mm²</div>
         </div>
         <div class="col-6">
-          <div class="kv">Mass per meter: <strong id="kgpm">—</strong> kg/m</div>
+          <div class="kv kgpm">Mass per meter: <strong id="kgpm">—</strong> kg/m</div>
         </div>
       </div>
       <small class="helper">Pure copper assumed (8.96 g/cm³). Solid sections only. Results rounded to 2 decimals.</small>
+      <div class="history" id="historyLast"></div>
+      <small class="helper" id="rrNote">RR OPERATIONS TEAM</small>
     </section>
   </div>
 
@@ -220,8 +234,9 @@
     const btnReset = document.getElementById('reset');
     const btnCopy = document.getElementById('copy');
     const btnSwap = document.getElementById('quickSwap');
+    const resultBar = document.querySelector('.result .inner');
 
-    const KEY = 'cu_rod_conversion_v3';
+    const KEY = 'cu_rod_conversion_v4';
 
     function setType(type){
       const isStrip = type === 'Strip';
@@ -376,10 +391,10 @@
     }
 
     // Events
-    tStrip.addEventListener('click', ()=> setType('Strip'));
-    tRod.addEventListener('click', ()=> setType('Rod'));
-    tRM.addEventListener('click',  ()=> setType('RM'));
-    mode.addEventListener('change', ()=>{ updateGivenUI(); compute(); });
+    tStrip.addEventListener('click', ()=>{ setType('Strip'); triggerFlash(); });
+    tRod.addEventListener('click', ()=>{ setType('Rod'); triggerFlash(); });
+    tRM.addEventListener('click',  ()=>{ setType('RM'); triggerFlash(); });
+    mode.addEventListener('change', ()=>{ updateGivenUI(); compute(); triggerFlash(); });
     ;[width, thk, dia, areaRM, given].forEach(el=> el.addEventListener('input', compute));
     btnReset.addEventListener('click', resetAll);
     btnCopy.addEventListener('click', ()=>{
@@ -410,16 +425,32 @@
       }catch(e){}
     }
 
+    // History saver
+    function saveHistoryFromDOM(){
+      try{
+        const head = resHead.textContent || '';
+        if(!head || head.includes('—')) return; // ignore placeholder
+        const subText = (resSub.innerText || resSub.textContent || '').replace(/[\n\r]+/g,' ').replace(/[\s]+/g,' ').trim();
+        const summary = `${head} — ${subText}`;
+        if(historyLast) historyLast.textContent = `Last: ${summary}`;
+        localStorage.setItem(KEY_LAST, summary);
+      }catch(e){}
+    }
+    const obs = new MutationObserver(() => saveHistoryFromDOM());
+    try{ obs.observe(resHead, {childList:true, subtree:true, characterData:true}); }catch(e){}
+
+    function triggerFlash(){
+      if(!resultBar) return;
+      resultBar.classList.remove('flash');
+      // force reflow to restart animation
+      void resultBar.offsetWidth;
+      resultBar.classList.add('flash');
+    }
+
     // Init
     hydrate();
     updateGivenUI();
-    if(!given.value){
-      // friendly defaults for demo: your case
-      setType('RM');
-      areaRM.value = '1.3';
-      mode.value = 'Meter to Kg';
-      given.value = '100';
-    }
+    // no demo defaults; keep inputs empty
     compute();
 
     // -----------------------
@@ -479,6 +510,6 @@
   })();
   </script>
   <!-- Always-visible watermark badge -->
-  <div class="watermark" aria-hidden="true" title="RR Operations team">RR Operations team</div>
+  
 </body>
 </html>
