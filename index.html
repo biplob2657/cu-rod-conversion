@@ -66,6 +66,12 @@
     .content{flex:1;margin-left:calc(var(--sidebar-width) + 20px);transition:var(--transition)}
     .layout.sidebar-collapsed .content{margin-left:calc(var(--sidebar-collapsed) + 20px)}
     
+    /* Main Header */
+    .hdr{text-align:center;margin-bottom:24px}
+    .title3d{margin:0;font-size:36px;letter-spacing:-0.02em;line-height:1.1;color:var(--ink);position:relative;font-weight:900;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .title3d:after{content:"";display:block;width:120px;height:4px;background:var(--gradient);margin:12px auto 0;border-radius:2px}
+    .powered{margin-top:8px;color:var(--muted);font-size:14px}
+    
     /* Page titles */
     .page-title{font-size:22px;font-weight:700;margin-bottom:16px;color:var(--ink);display:flex;align-items:center;gap:10px}
     .page-title i{color:var(--primary)}
@@ -113,6 +119,8 @@
       .sidebar{position:fixed;left:0;top:0;bottom:0;transform:translateX(-100%);transition:transform 0.3s ease;width:min(80%,320px);z-index:30;box-shadow:0 0 30px rgba(0,0,0,0.2);border-radius:0}
       .sidebar.mobile-open{transform:translateX(0)}
       .content{margin-left:0}
+      .hdr{margin-bottom:16px}
+      .title3d{font-size:28px}
     }
 
     /* Buttons, inputs */
@@ -177,13 +185,6 @@
     .cu .seg button{flex:1;border:0;background:transparent;color:var(--muted);padding:8px 10px;border-radius:6px;font-weight:500;transition:var(--transition)}
     .cu .seg button:hover{color:var(--ink)}
     .cu .seg button.active{background:var(--gradient);color:#fff}
-    
-    /* Accordion */
-    .acd{margin-bottom:14px}
-    .acd summary{font-size:16px;font-weight:700;padding:10px 0;cursor:pointer;list-style:none;position:relative;transition:var(--transition)}
-    .acd summary:before{content:'▶';position:absolute;left:-20px;transition:transform 0.3s}
-    .acd[open] summary:before{transform:rotate(90deg)}
-    .acd-body{padding:12px 0}
     
     /* Loading animation */
     .loader{display:inline-block;width:20px;height:20px;border:3px solid var(--line);border-radius:50%;border-top-color:var(--primary);animation:spin 1s ease-in-out infinite}
@@ -259,6 +260,12 @@
 
     <main class="content">
       <div class="app">
+        <!-- Main Header -->
+        <div class="hdr">
+          <h1 class="title3d">RR Cable Shop</h1>
+          <div class="powered">Powered by <b>RR Operations Team</b></div>
+        </div>
+
         <!-- Home (Calendar + Brain Game) -->
         <section id="home" class="page active">
           <div class="cal card lift" id="calCard">
@@ -310,63 +317,60 @@
             <i class="fas fa-calculator"></i>
             <span>Reel Selector</span>
           </div>
-          <details class="acd" open>
-            <summary>01. Reel Selector</summary>
-            <div class="acd-body">
-              <div class="seg">
-                <button id="mode-regular" class="active" onclick="setMode('regular')">Regular</button>
-                <button id="mode-custom" onclick="setMode('custom')">Customized</button>
-              </div>
-
-              <!-- Regular -->
-              <div id="panel-regular" class="card">
-                <div class="grid">
-                  <div>
-                    <label>Cable OD (mm)</label>
-                    <input id="r-cable-od" type="number" min="1" step="0.1" placeholder="e.g., 31">
-                  </div>
-                  <div>
-                    <label>Length (m)</label>
-                    <input id="r-length" type="number" min="1" step="1" placeholder="e.g., 1050">
-                  </div>
-                </div>
-                <div class="row">
-                  <button class="btn" onclick="computeRegular()">Calculate</button>
-                  <button class="btn-ghost" onclick="resetRegular()">Reset</button>
-                  <button class="btn-ghost" onclick="copyRegular()" id="r-copy">Copy</button>
-                </div>
-                <div id="r-out" class="result"></div>
-              </div>
-
-              <!-- Customized -->
-              <div id="panel-custom" class="card" style="display:none">
-                <div class="grid">
-                  <div>
-                    <label>Cable OD (mm)</label>
-                    <input id="c-cable-od" type="number" min="1" step="0.1" placeholder="e.g., 31">
-                  </div>
-                  <div>
-                    <label>Reel OD (mm)</label>
-                    <input id="c-rod" type="number" min="100" step="1" placeholder="e.g., 1600">
-                  </div>
-                  <div>
-                    <label>Barrel ID (mm)</label>
-                    <input id="c-rid" type="number" min="50" step="1" placeholder="e.g., 800">
-                  </div>
-                  <div>
-                    <label>Traverse (mm)</label>
-                    <input id="c-trv" type="number" min="50" step="1" placeholder="e.g., 800">
-                  </div>
-                </div>
-                <div class="row">
-                  <button class="btn" onclick="computeCustom()">Calculate</button>
-                  <button class="btn-ghost" onclick="resetCustom()">Reset</button>
-                  <button class="btn-ghost" onclick="copyCustom()" id="c-copy">Copy</button>
-                </div>
-                <div id="c-out" class="result"></div>
-              </div>
+          <div class="card">
+            <div class="seg">
+              <button id="mode-regular" class="active" onclick="setMode('regular')">Regular</button>
+              <button id="mode-custom" onclick="setMode('custom')">Customized</button>
             </div>
-          </details>
+
+            <!-- Regular -->
+            <div id="panel-regular" class="card">
+              <div class="grid">
+                <div>
+                  <label>Cable OD (mm)</label>
+                  <input id="r-cable-od" type="number" min="1" step="0.1" placeholder="e.g., 31">
+                </div>
+                <div>
+                  <label>Length (m)</label>
+                  <input id="r-length" type="number" min="1" step="1" placeholder="e.g., 1050">
+                </div>
+              </div>
+              <div class="row">
+                <button class="btn" onclick="computeRegular()">Calculate</button>
+                <button class="btn-ghost" onclick="resetRegular()">Reset</button>
+                <button class="btn-ghost" onclick="copyRegular()" id="r-copy">Copy</button>
+              </div>
+              <div id="r-out" class="result"></div>
+            </div>
+
+            <!-- Customized -->
+            <div id="panel-custom" class="card" style="display:none">
+              <div class="grid">
+                <div>
+                  <label>Cable OD (mm)</label>
+                  <input id="c-cable-od" type="number" min="1" step="0.1" placeholder="e.g., 31">
+                </div>
+                <div>
+                  <label>Reel OD (mm)</label>
+                  <input id="c-rod" type="number" min="100" step="1" placeholder="e.g., 1600">
+                </div>
+                <div>
+                  <label>Barrel ID (mm)</label>
+                  <input id="c-rid" type="number" min="50" step="1" placeholder="e.g., 800">
+                </div>
+                <div>
+                  <label>Traverse (mm)</label>
+                  <input id="c-trv" type="number" min="50" step="1" placeholder="e.g., 800">
+                </div>
+              </div>
+              <div class="row">
+                <button class="btn" onclick="computeCustom()">Calculate</button>
+                <button class="btn-ghost" onclick="resetCustom()">Reset</button>
+                <button class="btn-ghost" onclick="copyCustom()" id="c-copy">Copy</button>
+              </div>
+              <div id="c-out" class="result"></div>
+            </div>
+          </div>
         </section>
 
         <!-- 02. Reel Dimension -->
@@ -375,42 +379,37 @@
             <i class="fas fa-ruler-combined"></i>
             <span>Reel Dimension</span>
           </div>
-          <details class="acd" open>
-            <summary>02. Reel Dimension</summary>
-            <div class="acd-body">
-              <div class="card">
-                <div class="svg-wrap">
-                  <svg viewBox="0 0 900 320" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" aria-label="Wooden reel dimension diagram">
-                    <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L8,4 L0,8 Z" fill="#111"/></marker></defs>
-                    <g font-family="Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="14" fill="#111" stroke="#111" stroke-width="2">
-                      <g transform="translate(150,160)">
-                        <circle cx="0" cy="0" r="110" fill="none" stroke="#111"/>
-                        <circle cx="0" cy="0" r="55" fill="none" stroke="#111"/>
-                        <line x1="-140" y1="-110" x2="-140" y2="110" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
-                        <text x="-180" y="0" transform="rotate(-90 -180,0)" text-anchor="middle">OD — Flange Diameter</text>
-                        <line x1="140" y1="-55" x2="140" y2="55" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
-                        <text x="170" y="0" transform="rotate(-90 170,0)" text-anchor="middle">Barrel ID — Core/Drum</text>
-                        <text x="0" y="140" text-anchor="middle" font-weight="700">Front View</text>
-                      </g>
-                      <g transform="translate(540,60)">
-                        <rect x="0" y="0" width="22" height="200" fill="#fff"/>
-                        <rect x="22" y="40" width="156" height="120" fill="#fff"/>
-                        <rect x="178" y="0" width="22" height="200" fill="#fff"/>
-                        <line x1="22" y1="230" x2="178" y2="230" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
-                        <text x="100" y="252" text-anchor="middle">Traverse — Between Flanges</text>
-                        <text x="100" y="-12" text-anchor="middle" font-weight="700">Side View</text>
-                      </g>
-                      <g transform="translate(30,300)" font-size="12">
-                        <text>• <tspan font-weight="700">OD</tspan> = Flange outer diameter (mm)</text>
-                        <text x="250">• <tspan font-weight="700">Barrel ID</tspan> = Core/Drum diameter (mm)</text>
-                        <text x="530">• <tspan font-weight="700">Traverse</tspan> = Distance between flanges (mm)</text>
-                      </g>
-                    </g>
-                  </svg>
-                </div>
-              </div>
+          <div class="card">
+            <div class="svg-wrap">
+              <svg viewBox="0 0 900 320" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" aria-label="Wooden reel dimension diagram">
+                <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L8,4 L0,8 Z" fill="#111"/></marker></defs>
+                <g font-family="Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="14" fill="#111" stroke="#111" stroke-width="2">
+                  <g transform="translate(150,160)">
+                    <circle cx="0" cy="0" r="110" fill="none" stroke="#111"/>
+                    <circle cx="0" cy="0" r="55" fill="none" stroke="#111"/>
+                    <line x1="-140" y1="-110" x2="-140" y2="110" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+                    <text x="-180" y="0" transform="rotate(-90 -180,0)" text-anchor="middle">OD — Flange Diameter</text>
+                    <line x1="140" y1="-55" x2="140" y2="55" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+                    <text x="170" y="0" transform="rotate(-90 170,0)" text-anchor="middle">Barrel ID — Core/Drum</text>
+                    <text x="0" y="140" text-anchor="middle" font-weight="700">Front View</text>
+                  </g>
+                  <g transform="translate(540,60)">
+                    <rect x="0" y="0" width="22" height="200" fill="#fff"/>
+                    <rect x="22" y="40" width="156" height="120" fill="#fff"/>
+                    <rect x="178" y="0" width="22" height="200" fill="#fff"/>
+                    <line x1="22" y1="230" x2="178" y2="230" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+                    <text x="100" y="252" text-anchor="middle">Traverse — Between Flanges</text>
+                    <text x="100" y="-12" text-anchor="middle" font-weight="700">Side View</text>
+                  </g>
+                  <g transform="translate(30,300)" font-size="12">
+                    <text>• <tspan font-weight="700">OD</tspan> = Flange outer diameter (mm)</text>
+                    <text x="250">• <tspan font-weight="700">Barrel ID</tspan> = Core/Drum diameter (mm)</text>
+                    <text x="530">• <tspan font-weight="700">Traverse</tspan> = Distance between flanges (mm)</text>
+                  </g>
+                </g>
+              </svg>
             </div>
-          </details>
+          </div>
         </section>
 
         <!-- 03. Standard Wood Reel -->
@@ -419,28 +418,23 @@
             <i class="fas fa-list"></i>
             <span>Standard Wood Reel</span>
           </div>
-          <details class="acd" open>
-            <summary>03. Standard Wood Reel</summary>
-            <div class="acd-body">
-              <div class="card">
-                <div class="grid">
-                  <div>
-                    <label>Cable OD (mm)</label>
-                    <input id="t-od" type="number" min="1" step="0.1" placeholder="e.g., 31" value="31">
-                  </div>
-                  <div>
-                    <label>Length (m) <span style="color:var(--muted)">(optional)</span></label>
-                    <input id="t-len" type="number" min="1" step="1" placeholder="e.g., 1050">
-                  </div>
-                </div>
-                <div class="row">
-                  <button class="btn" onclick="buildReelTable()">Update</button>
-                </div>
-                <table class="tbl mono" id="reel-table"></table>
-                <div class="note">Capacities use your factory calibration (PF = 0.7855) at 90% fill. Geometric @90% is higher and shown only in the selector for reference.</div>
+          <div class="card">
+            <div class="grid">
+              <div>
+                <label>Cable OD (mm)</label>
+                <input id="t-od" type="number" min="1" step="0.1" placeholder="e.g., 31" value="31">
+              </div>
+              <div>
+                <label>Length (m) <span style="color:var(--muted)">(optional)</span></label>
+                <input id="t-len" type="number" min="1" step="1" placeholder="e.g., 1050">
               </div>
             </div>
-          </details>
+            <div class="row">
+              <button class="btn" onclick="buildReelTable()">Update</button>
+            </div>
+            <table class="tbl mono" id="reel-table"></table>
+            <div class="note">Capacities use your factory calibration (PF = 0.7855) at 90% fill. Geometric @90% is higher and shown only in the selector for reference.</div>
+          </div>
         </section>
 
         <!-- 04. Copper Rod Conversion -->
@@ -449,72 +443,67 @@
             <i class="fas fa-exchange-alt"></i>
             <span>Copper Conversion</span>
           </div>
-          <details class="acd" open>
-            <summary>04. Copper Rod Conversion</summary>
-            <div class="acd-body">
-              <div class="cu">
-                <section class="card panel" aria-label="Inputs">
-                  <div class="grid">
-                    <div class="col-12">
-                      <label for="cu-type">Select Type</label>
-                      <div class="seg" role="tablist" aria-label="Product Type">
-                        <button id="cu-tStrip" class="active" role="tab" aria-selected="true">Strip</button>
-                        <button id="cu-tRod" role="tab" aria-selected="false">Bare Rod / Wire</button>
-                        <button id="cu-tRM" role="tab" aria-selected="false">Bare Cable (RM)</button>
-                      </div>
-                    </div>
-                    <div class="col-12">
-                      <label for="cu-mode">Select Conversion</label>
-                      <select id="cu-mode" aria-label="Conversion Mode">
-                        <option>Kg to Meter</option>
-                        <option>Kg to Ft</option>
-                        <option>Meter to Kg</option>
-                        <option>Ft to Kg</option>
-                      </select>
-                    </div>
-                    <div class="col-6 only-strip">
-                      <label for="cu-width">Given Width (mm)</label>
-                      <input id="cu-width" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g., 10" />
-                    </div>
-                    <div class="col-6 only-strip">
-                      <label for="cu-thickness">Given Thickness (mm)</label>
-                      <input id="cu-thickness" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g., 3" />
-                    </div>
-                    <div class="col-6 only-rod" style="display:none">
-                      <label for="cu-diameter">Given Diameter (mm)</label>
-                      <input id="cu-diameter" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g., 12" />
-                    </div>
-                    <div class="col-6 only-rm" style="display:none">
-                      <label for="cu-areaRM">Cable (RM) Size (mm²)</label>
-                      <input id="cu-areaRM" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g., 1.3" />
-                    </div>
-                    <div class="col-12">
-                      <label id="cu-given-label" for="cu-given">Given Kg</label>
-                      <input id="cu-given" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g., 500" />
-                    </div>
-                    <div class="col-12" style="display:flex;gap:10px;flex-wrap:wrap">
-                      <button id="cu-reset" class="btn-ghost btn" type="button">Reset</button>
-                      <button id="cu-copy" class="btn" type="button" title="Copy result">Copy Result</button>
-                      <button id="cu-quickSwap" class="btn-ghost btn" type="button" title="Swap Kg⇄Length where applicable">Swap</button>
-                    </div>
+          <div class="cu">
+            <section class="card panel" aria-label="Inputs">
+              <div class="grid">
+                <div class="col-12">
+                  <label for="cu-type">Select Type</label>
+                  <div class="seg" role="tablist" aria-label="Product Type">
+                    <button id="cu-tStrip" class="active" role="tab" aria-selected="true">Strip</button>
+                    <button id="cu-tRod" role="tab" aria-selected="false">Bare Rod / Wire</button>
+                    <button id="cu-tRM" role="tab" aria-selected="false">Bare Cable (RM)</button>
                   </div>
-                </section>
-
-                <section class="card panel" style="margin-top:14px" aria-label="Details">
-                  <div class="grid">
-                    <div class="col-6">
-                      <div class="pill">Area: <b id="cu-area">—</b> mm²</div>
-                    </div>
-                    <div class="col-6">
-                      <div class="pill">Mass per meter: <b id="cu-kgpm">—</b> kg/m</div>
-                    </div>
-                  </div>
-                  <div class="mono" id="cu-result-head" style="font-weight:800;margin-top:10px">Result: —</div>
-                  <div class="note" id="cu-result-sub">Enter dimensions & a value to calculate.</div>
-                </section>
+                </div>
+                <div class="col-12">
+                  <label for="cu-mode">Select Conversion</label>
+                  <select id="cu-mode" aria-label="Conversion Mode">
+                    <option>Kg to Meter</option>
+                    <option>Kg to Ft</option>
+                    <option>Meter to Kg</option>
+                    <option>Ft to Kg</option>
+                  </select>
+                </div>
+                <div class="col-6 only-strip">
+                  <label for="cu-width">Given Width (mm)</label>
+                  <input id="cu-width" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g., 10" />
+                </div>
+                <div class="col-6 only-strip">
+                  <label for="cu-thickness">Given Thickness (mm)</label>
+                  <input id="cu-thickness" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g., 3" />
+                </div>
+                <div class="col-6 only-rod" style="display:none">
+                  <label for="cu-diameter">Given Diameter (mm)</label>
+                  <input id="cu-diameter" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g., 12" />
+                </div>
+                <div class="col-6 only-rm" style="display:none">
+                  <label for="cu-areaRM">Cable (RM) Size (mm²)</label>
+                  <input id="cu-areaRM" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g., 1.3" />
+                </div>
+                <div class="col-12">
+                  <label id="cu-given-label" for="cu-given">Given Kg</label>
+                  <input id="cu-given" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g., 500" />
+                </div>
+                <div class="col-12" style="display:flex;gap:10px;flex-wrap:wrap">
+                  <button id="cu-reset" class="btn-ghost btn" type="button">Reset</button>
+                  <button id="cu-copy" class="btn" type="button" title="Copy result">Copy Result</button>
+                  <button id="cu-quickSwap" class="btn-ghost btn" type="button" title="Swap Kg⇄Length where applicable">Swap</button>
+                </div>
               </div>
-            </div>
-          </details>
+            </section>
+
+            <section class="card panel" style="margin-top:14px" aria-label="Details">
+              <div class="grid">
+                <div class="col-6">
+                  <div class="pill">Area: <b id="cu-area">—</b> mm²</div>
+                </div>
+                <div class="col-6">
+                  <div class="pill">Mass per meter: <b id="cu-kgpm">—</b> kg/m</div>
+                </div>
+              </div>
+              <div class="mono" id="cu-result-head" style="font-weight:800;margin-top:10px">Result: —</div>
+              <div class="note" id="cu-result-sub">Enter dimensions & a value to calculate.</div>
+            </section>
+          </div>
         </section>
 
       </div> <!-- /.app -->
@@ -612,8 +601,6 @@
       function showPage(id){
         pages.forEach(p=>{ const sec=document.getElementById(p); if(sec) sec.classList.toggle('active', p===id); });
         buttons.forEach(b=> b.classList.toggle('active', b.dataset.target===id));
-        const openDetails = document.querySelector('#'+id+' details.acd');
-        if(openDetails) openDetails.setAttribute('open','');
         
         // Auto-expand sidebar on mobile when navigating
         if(window.innerWidth <= 900) {
