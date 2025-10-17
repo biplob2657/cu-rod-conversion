@@ -66,7 +66,7 @@
     .content{flex:1;margin-left:calc(var(--sidebar-width) + 20px);transition:var(--transition)}
     .layout.sidebar-collapsed .content{margin-left:calc(var(--sidebar-collapsed) + 20px)}
     
-    /* Main Header */
+    /* Main Header - Visible on Desktop */
     .hdr{text-align:center;margin-bottom:24px}
     .title3d{margin:0;font-size:36px;letter-spacing:-0.02em;line-height:1.1;color:var(--ink);position:relative;font-weight:900;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
     .title3d:after{content:"";display:block;width:120px;height:4px;background:var(--gradient);margin:12px auto 0;border-radius:2px}
@@ -113,14 +113,15 @@
     @media (max-width:900px){
       .layout{flex-direction:column;padding:0}
       .layout.sidebar-collapsed{padding-left:0}
-      .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 20px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel);z-index:20;box-shadow:0 4px 12px rgba(0,0,0,0.05)}
-      .menu-btn{border:1px solid var(--line);background:var(--panel);padding:10px 14px;border-radius:12px;font-weight:600;transition:var(--transition)}
+      .topbar{display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px 20px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel);z-index:20;box-shadow:0 4px 12px rgba(0,0,0,0.05)}
+      .topbar .title3d{font-size:24px;margin:0}
+      .topbar .powered{font-size:12px;margin:0}
+      .menu-btn{position:absolute;left:20px;top:50%;transform:translateY(-50%);border:1px solid var(--line);background:var(--panel);padding:10px 14px;border-radius:12px;font-weight:600;transition:var(--transition)}
       .menu-btn:hover{background:var(--bg)}
       .sidebar{position:fixed;left:0;top:0;bottom:0;transform:translateX(-100%);transition:transform 0.3s ease;width:min(80%,320px);z-index:30;box-shadow:0 0 30px rgba(0,0,0,0.2);border-radius:0}
       .sidebar.mobile-open{transform:translateX(0)}
       .content{margin-left:0}
-      .hdr{margin-bottom:16px}
-      .title3d{font-size:28px}
+      .hdr{display:none} /* Hide desktop header on mobile */
     }
 
     /* Buttons, inputs */
@@ -220,8 +221,8 @@
   <div class="layout" id="mainLayout">
     <div class="topbar">
       <button class="menu-btn" id="menuBtn" aria-label="Menu"><i class="fas fa-bars"></i></button>
-      <div class="brand"><span class="badge">RR</span><span>Cable Shop</span></div>
-      <div style="width:40px"></div>
+      <h1 class="title3d">RR Cable Shop</h1>
+      <div class="powered">Powered by <b>RR Operations Team</b></div>
     </div>
 
     <aside class="sidebar" id="sidebar">
@@ -260,7 +261,7 @@
 
     <main class="content">
       <div class="app">
-        <!-- Main Header -->
+        <!-- Main Header - Visible on Desktop -->
         <div class="hdr">
           <h1 class="title3d">RR Cable Shop</h1>
           <div class="powered">Powered by <b>RR Operations Team</b></div>
