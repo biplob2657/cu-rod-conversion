@@ -65,11 +65,8 @@
 
     .content{flex:1;margin-left:calc(var(--sidebar-width) + 20px);transition:var(--transition)}
     .layout.sidebar-collapsed .content{margin-left:calc(var(--sidebar-collapsed) + 20px)}
-    .hdr{display:none} /* Hide the main title on all pages */
-    .mobile-hdr{text-align:center;margin-bottom:16px;padding:0 20px}
-    .mobile-hdr .title3d{margin:0;font-size:28px;letter-spacing:-0.02em;line-height:1.1;color:var(--ink);position:relative;font-weight:900;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-    .mobile-hdr .title3d:after{content:"";display:block;width:100px;height:3px;background:var(--gradient);margin:8px auto 0;border-radius:2px}
-    .mobile-hdr .powered{margin-top:6px;color:var(--muted);font-size:13px}
+    
+    /* Page titles */
     .page-title{font-size:22px;font-weight:700;margin-bottom:16px;color:var(--ink);display:flex;align-items:center;gap:10px}
     .page-title i{color:var(--primary)}
 
@@ -116,7 +113,6 @@
       .sidebar{position:fixed;left:0;top:0;bottom:0;transform:translateX(-100%);transition:transform 0.3s ease;width:min(80%,320px);z-index:30;box-shadow:0 0 30px rgba(0,0,0,0.2);border-radius:0}
       .sidebar.mobile-open{transform:translateX(0)}
       .content{margin-left:0}
-      .mobile-hdr{display:block}
     }
 
     /* Buttons, inputs */
@@ -263,12 +259,6 @@
 
     <main class="content">
       <div class="app">
-        <!-- Mobile Header (only visible on mobile) -->
-        <div class="mobile-hdr">
-          <h1 class="title3d">RR Cable Shop</h1>
-          <div class="powered">Powered by <b>RR Operations Team</b></div>
-        </div>
-
         <!-- Home (Calendar + Brain Game) -->
         <section id="home" class="page active">
           <div class="cal card lift" id="calCard">
