@@ -3,7 +3,6 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"/>
-  <meta name="theme-color" content="#1e293b"/>
   <title>RR Cable Shop</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -30,6 +29,8 @@
       --card-shadow:0 10px 30px rgba(0,0,0,0.08);
       --hover-shadow:0 20px 40px rgba(0,0,0,0.12);
       --transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --sidebar-width:280px;
+      --sidebar-collapsed:70px;
     }
     
     *{box-sizing:border-box}
@@ -37,93 +38,114 @@
     body{margin:0;background:var(--bg);color:var(--ink);font-family:'Inter', system-ui, -apple-system, sans-serif;font-weight:400;line-height:1.6;letter-spacing:-0.01em}
 
     /* ===== Shell (sidebar + content) ===== */
-    .layout{max-width:1400px;margin:0 auto;display:flex;gap:20px;padding:20px}
-    .sidebar{width:280px;background:var(--panel);border-radius:20px;padding:24px;box-shadow:var(--card-shadow);position:sticky;top:20px;height:fit-content;backdrop-filter:blur(10px);background:rgba(255,255,255,0.9);border:1px solid rgba(255,255,255,0.2)}
-    .brand{font-weight:900;font-size:24px;letter-spacing:-0.02em;margin-bottom:24px;display:flex;align-items:center;gap:12px}
-    .brand .badge{background:var(--gradient);color:#fff;padding:8px 14px;border-radius:12px;font-size:18px;box-shadow:0 4px 12px rgba(102, 126, 234, 0.4)}
+    .layout{max-width:1400px;margin:0 auto;display:flex;gap:20px;padding:20px;transition:var(--transition)}
+    .layout.sidebar-collapsed{padding-left:80px}
+    .sidebar{width:var(--sidebar-width);background:var(--panel);border-radius:20px;padding:24px;box-shadow:var(--card-shadow);position:fixed;left:20px;top:20px;height:calc(100vh - 40px);z-index:40;transition:var(--transition);backdrop-filter:blur(10px);background:rgba(255,255,255,0.9);border:1px solid rgba(255,255,255,0.2);overflow:hidden}
+    .sidebar.collapsed{width:var(--sidebar-collapsed);padding:16px 12px}
+    .sidebar-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+    .brand{font-weight:900;font-size:24px;letter-spacing:-0.02em;display:flex;align-items:center;gap:12px;transition:var(--transition)}
+    .sidebar.collapsed .brand{font-size:18px;justify-content:center}
+    .brand .badge{background:var(--gradient);color:#fff;padding:8px 14px;border-radius:12px;font-size:18px;box-shadow:0 4px 12px rgba(102, 126, 234, 0.4);transition:var(--transition)}
+    .sidebar.collapsed .brand .badge{padding:6px 8px;font-size:14px}
+    .sidebar.collapsed .brand span:not(.badge){display:none}
+    .sidebar-toggle{width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:var(--panel);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--transition)}
+    .sidebar-toggle:hover{background:var(--bg);transform:scale(1.05)}
     .nav{display:flex;flex-direction:column;gap:10px}
-    .nav button{appearance:none;border:none;background:transparent;color:var(--ink);text-align:left;padding:14px 16px;border-radius:14px;font-weight:600;cursor:pointer;transition:var(--transition);position:relative;overflow:hidden}
+    .nav button{appearance:none;border:none;background:transparent;color:var(--ink);text-align:left;padding:14px 16px;border-radius:14px;font-weight:600;cursor:pointer;transition:var(--transition);position:relative;overflow:hidden;display:flex;align-items:center;gap:12px}
+    .sidebar.collapsed .nav button{justify-content:center;padding:12px}
+    .nav button i{font-size:18px;width:20px;text-align:center}
+    .nav button span{transition:var(--transition)}
+    .sidebar.collapsed .nav button span{display:none}
     .nav button:before{content:'';position:absolute;top:0;left:0;width:0;height:100%;background:var(--gradient);transition:width 0.3s;z-index:-1}
     .nav button:hover:before{width:100%}
     .nav button:hover{color:#fff;transform:translateX(5px)}
+    .sidebar.collapsed .nav button:hover{transform:scale(1.05)}
     .nav button.active{background:var(--gradient);color:#fff;box-shadow:0 4px 12px rgba(102, 126, 234, 0.3)}
+    .sidebar.collapsed .nav button.active{padding:12px}
 
-    .content{flex:1}
-    .hdr{text-align:center;margin-bottom:24px}
-    .title3d{margin:0;font-size:36px;letter-spacing:-0.02em;line-height:1.1;color:var(--ink);position:relative;font-weight:900;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-    .title3d:after{content:"";display:block;width:120px;height:4px;background:var(--gradient);margin:12px auto 0;border-radius:2px}
-    .powered{margin-top:8px;color:var(--muted);font-size:14px}
+    .content{flex:1;margin-left:calc(var(--sidebar-width) + 20px);transition:var(--transition)}
+    .layout.sidebar-collapsed .content{margin-left:calc(var(--sidebar-collapsed) + 20px)}
+    .hdr{display:none} /* Hide the main title on all pages */
+    .mobile-hdr{text-align:center;margin-bottom:16px;padding:0 20px}
+    .mobile-hdr .title3d{margin:0;font-size:28px;letter-spacing:-0.02em;line-height:1.1;color:var(--ink);position:relative;font-weight:900;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .mobile-hdr .title3d:after{content:"";display:block;width:100px;height:3px;background:var(--gradient);margin:8px auto 0;border-radius:2px}
+    .mobile-hdr .powered{margin-top:6px;color:var(--muted);font-size:13px}
+    .page-title{font-size:22px;font-weight:700;margin-bottom:16px;color:var(--ink);display:flex;align-items:center;gap:10px}
+    .page-title i{color:var(--primary)}
 
     /* Pages */
     .page{display:none;animation:fadeIn 0.5s ease}
     .page.active{display:block}
     @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 
-    /* Calendar */
-    .cal{background:var(--panel);border-radius:20px;padding:20px;box-shadow:var(--card-shadow);backdrop-filter:blur(10px);background:rgba(255,255,255,0.9);border:1px solid rgba(255,255,255,0.2)}
-    .cal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
-    .cal-title{display:flex;align-items:center;gap:12px;font-weight:700;font-size:18px}
-    .cal-head .btn-icon{width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:var(--panel);cursor:pointer;font-size:18px;transition:var(--transition);display:flex;align-items:center;justify-content:center}
+    /* Compact Calendar */
+    .cal{background:var(--panel);border-radius:16px;padding:12px;box-shadow:var(--card-shadow);backdrop-filter:blur(10px);background:rgba(255,255,255,0.9);border:1px solid rgba(255,255,255,0.2)}
+    .cal-head{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+    .cal-title{display:flex;align-items:center;gap:8px;font-weight:600;font-size:16px}
+    .cal-head .btn-icon{width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:var(--panel);cursor:pointer;font-size:14px;transition:var(--transition);display:flex;align-items:center;justify-content:center}
     .cal-head .btn-icon:hover{background:var(--bg);transform:scale(1.05)}
-    .cal-when{display:flex;gap:8px}
-    .cal-when select,.cal-when input{padding:10px 14px;border-radius:12px;border:1px solid var(--line);background:var(--panel);transition:var(--transition)}
+    .cal-when{display:flex;gap:6px}
+    .cal-when select,.cal-when input{padding:6px 8px;border-radius:8px;border:1px solid var(--line);background:var(--panel);transition:var(--transition);font-size:14px}
     .cal-when select:focus,.cal-when input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(59, 130, 246, 0.1)}
-    .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
-    .cal-grid .cell{aspect-ratio:1/1;border:1px solid var(--line);border-radius:12px;display:flex;align-items:center;justify-content:center;transition:var(--transition);cursor:pointer}
+    .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+    .cal-grid .cell{aspect-ratio:1/1;border:1px solid var(--line);border-radius:8px;display:flex;align-items:center;justify-content:center;transition:var(--transition);cursor:pointer;font-size:13px}
     .cal-grid .cell:hover{background:var(--bg);transform:scale(1.05)}
-    .cal-grid .dow{font-weight:700;background:var(--bg);color:var(--muted)}
+    .cal-grid .dow{font-weight:600;background:var(--bg);color:var(--muted);font-size:11px}
     .cal-grid .muted{color:#ccc}
-    .cal-grid .today{border-color:var(--primary);background:rgba(59, 130, 246, 0.1);color:var(--primary);font-weight:700;box-shadow:0 0 0 2px rgba(59, 130, 246, 0.2)}
+    .cal-grid .today{border-color:var(--primary);background:rgba(59, 130, 246, 0.1);color:var(--primary);font-weight:600;box-shadow:0 0 0 2px rgba(59, 130, 246, 0.2)}
 
     /* Brain Game */
-    .game{background:var(--panel);border-radius:20px;padding:20px;box-shadow:var(--card-shadow);margin-top:20px;backdrop-filter:blur(10px);background:rgba(255,255,255,0.9);border:1px solid rgba(255,255,255,0.2)}
-    .game h3{margin:0 0 16px 0;font-size:20px;font-weight:700}
-    .game-row{display:grid;grid-template-columns:1fr;gap:16px}
-    .q{font-size:28px;font-weight:800;letter-spacing:-0.02em;margin-bottom:16px}
-    .stat{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
-    .pill{border:1px solid var(--line);border-radius:12px;padding:10px 14px;background:var(--panel);font-weight:500}
+    .game{background:var(--panel);border-radius:16px;padding:16px;box-shadow:var(--card-shadow);margin-top:16px;backdrop-filter:blur(10px);background:rgba(255,255,255,0.9);border:1px solid rgba(255,255,255,0.2)}
+    .game h3{margin:0 0 12px 0;font-size:18px;font-weight:700}
+    .game-row{display:grid;grid-template-columns:1fr;gap:12px}
+    .q{font-size:24px;font-weight:800;letter-spacing:-0.02em;margin-bottom:12px}
+    .stat{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+    .pill{border:1px solid var(--line);border-radius:10px;padding:8px 12px;background:var(--panel);font-weight:500;font-size:14px}
     .ok{color:var(--success)}.err{color:var(--error)}
-    .game .row{display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:end}
-    .hint{font-size:13px;color:var(--muted);margin-top:8px}
+    .game .row{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:end}
+    .hint{font-size:12px;color:var(--muted);margin-top:6px}
 
     /* Mobile nav: off-canvas */
     .topbar{display:none}
     @media (max-width:900px){
       .layout{flex-direction:column;padding:0}
+      .layout.sidebar-collapsed{padding-left:0}
       .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 20px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel);z-index:20;box-shadow:0 4px 12px rgba(0,0,0,0.05)}
       .menu-btn{border:1px solid var(--line);background:var(--panel);padding:10px 14px;border-radius:12px;font-weight:600;transition:var(--transition)}
       .menu-btn:hover{background:var(--bg)}
-      .sidebar{position:fixed;left:0;top:0;bottom:0;transform:translateX(-100%);transition:transform 0.3s ease;width:min(80%,320px);z-index:30;box-shadow:0 0 30px rgba(0,0,0,0.2)}
-      body.menu-open .sidebar{transform:translateX(0)}
+      .sidebar{position:fixed;left:0;top:0;bottom:0;transform:translateX(-100%);transition:transform 0.3s ease;width:min(80%,320px);z-index:30;box-shadow:0 0 30px rgba(0,0,0,0.2);border-radius:0}
+      .sidebar.mobile-open{transform:translateX(0)}
+      .content{margin-left:0}
+      .mobile-hdr{display:block}
     }
 
     /* Buttons, inputs */
-    .btn{background:var(--gradient);color:var(--btn-ink);border:none;cursor:pointer;font-weight:600;letter-spacing:-0.01em;padding:12px 16px;border-radius:12px;transition:var(--transition);position:relative;overflow:hidden}
+    .btn{background:var(--gradient);color:var(--btn-ink);border:none;cursor:pointer;font-weight:600;letter-spacing:-0.01em;padding:10px 14px;border-radius:10px;transition:var(--transition);position:relative;overflow:hidden;font-size:14px}
     .btn:before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(255,255,255,0.2);transform:translateX(-100%);transition:transform 0.3s}
     .btn:hover:before{transform:translateX(0)}
     .btn:hover{transform:translateY(-2px);box-shadow:0 10px 20px rgba(0,0,0,0.1)}
     .btn-ghost{background:var(--panel);color:var(--ink);border:1px solid var(--line);font-weight:500}
     .btn-ghost:hover{background:var(--bg);transform:translateY(-2px)}
     input,button,select{font-size:16px;font-family:'Inter', sans-serif}
-    input[type=number], input[type=text]{width:100%;padding:12px 16px;border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--ink);transition:var(--transition)}
+    input[type=number], input[type=text]{width:100%;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--ink);transition:var(--transition)}
     input[type=number]:focus, input[type=text]:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(59, 130, 246, 0.1)}
 
     /* Existing cards / controls for calculators */
-    .card{background:var(--panel);border-radius:16px;padding:20px;box-shadow:var(--card-shadow);margin-bottom:20px;backdrop-filter:blur(10px);background:rgba(255,255,255,0.9);border:1px solid rgba(255,255,255,0.2)}
-    .grid{display:grid;grid-template-columns:1fr;gap:16px}
+    .card{background:var(--panel);border-radius:14px;padding:16px;box-shadow:var(--card-shadow);margin-bottom:16px;backdrop-filter:blur(10px);background:rgba(255,255,255,0.9);border:1px solid rgba(255,255,255,0.2)}
+    .grid{display:grid;grid-template-columns:1fr;gap:14px}
     @media (min-width:560px){.grid{grid-template-columns:1fr 1fr}}
 
-    .row{display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:end;margin-top:16px}
-    .result{margin-top:16px;border-top:1px dashed var(--line);padding-top:16px}
-    .caps{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .row{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:end;margin-top:14px}
+    .result{margin-top:14px;border-top:1px dashed var(--line);padding-top:14px}
+    .caps{display:grid;grid-template-columns:1fr 1fr;gap:10px}
     @media (max-width:480px){.caps{grid-template-columns:1fr}}
     .mono{font-variant-numeric:tabular-nums}
-    .tbl{width:100%;border-collapse:collapse;margin-top:16px}
-    .tbl th,.tbl td{border-bottom:1px solid var(--line);padding:12px 8px;text-align:left}
+    .tbl{width:100%;border-collapse:collapse;margin-top:14px}
+    .tbl th,.tbl td{border-bottom:1px solid var(--line);padding:10px 6px;text-align:left}
     .tbl th{font-weight:600;color:var(--muted)}
-    .note{color:var(--muted);font-size:13px;margin-top:8px}
-    .seg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
-    .seg button{padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--panel);font-weight:500;transition:var(--transition)}
+    .note{color:var(--muted);font-size:12px;margin-top:6px}
+    .seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
+    .seg button{padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--panel);font-weight:500;transition:var(--transition)}
     .seg button:hover{background:var(--bg)}
     .seg button.active{background:var(--gradient);color:#fff;border-color:transparent}
     .svg-wrap{width:100%;overflow:auto}
@@ -148,35 +170,40 @@
     @keyframes monthFlip{0%{transform:rotateX(-12deg) translateY(-6px);opacity:0}100%{transform:none;opacity:1}}
 
     /* Copper Conversion scoped */
-    .cu .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px}
+    .cu .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:10px}
     .cu .col-12{grid-column:span 12}
     .cu .col-6{grid-column:span 6}
     @media (max-width:760px){.cu .grid{grid-template-columns:repeat(6,1fr)}.cu .col-6{grid-column:span 6}}
-    .cu label{display:block;font-size:14px;color:var(--muted);margin:0 0 8px 2px;font-weight:500}
-    .cu select,.cu input{width:100%;padding:12px 16px;border-radius:12px;border:1px solid var(--line);background:var(--panel);color:var(--ink);transition:var(--transition)}
+    .cu label{display:block;font-size:13px;color:var(--muted);margin:0 0 6px 2px;font-weight:500}
+    .cu select,.cu input{width:100%;padding:10px 14px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);transition:var(--transition)}
     .cu select:focus,.cu input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(59, 130, 246, 0.1)}
-    .cu .seg{display:flex;border:1px solid var(--line);padding:6px;border-radius:12px;background:var(--panel)}
-    .cu .seg button{flex:1;border:0;background:transparent;color:var(--muted);padding:10px 12px;border-radius:8px;font-weight:500;transition:var(--transition)}
+    .cu .seg{display:flex;border:1px solid var(--line);padding:4px;border-radius:10px;background:var(--panel)}
+    .cu .seg button{flex:1;border:0;background:transparent;color:var(--muted);padding:8px 10px;border-radius:6px;font-weight:500;transition:var(--transition)}
     .cu .seg button:hover{color:var(--ink)}
     .cu .seg button.active{background:var(--gradient);color:#fff}
     
     /* Accordion */
-    .acd{margin-bottom:16px}
-    .acd summary{font-size:18px;font-weight:700;padding:12px 0;cursor:pointer;list-style:none;position:relative;transition:var(--transition)}
+    .acd{margin-bottom:14px}
+    .acd summary{font-size:16px;font-weight:700;padding:10px 0;cursor:pointer;list-style:none;position:relative;transition:var(--transition)}
     .acd summary:before{content:'▶';position:absolute;left:-20px;transition:transform 0.3s}
     .acd[open] summary:before{transform:rotate(90deg)}
-    .acd-body{padding:16px 0}
+    .acd-body{padding:12px 0}
     
     /* Loading animation */
     .loader{display:inline-block;width:20px;height:20px;border:3px solid var(--line);border-radius:50%;border-top-color:var(--primary);animation:spin 1s ease-in-out infinite}
     @keyframes spin{to{transform:rotate(360deg)}}
     
     /* Notification */
-    .notification{position:fixed;bottom:20px;right:20px;background:var(--panel);padding:16px 20px;border-radius:12px;box-shadow:var(--card-shadow);display:flex;align-items:center;gap:12px;z-index:1000;transform:translateY(100px);opacity:0;transition:var(--transition)}
+    .notification{position:fixed;bottom:20px;right:20px;background:var(--panel);padding:14px 18px;border-radius:12px;box-shadow:var(--card-shadow);display:flex;align-items:center;gap:10px;z-index:1000;transform:translateY(100px);opacity:0;transition:var(--transition)}
     .notification.show{transform:translateY(0);opacity:1}
     .notification.success{border-left:4px solid var(--success)}
     .notification.error{border-left:4px solid var(--error)}
     .notification.info{border-left:4px solid var(--primary)}
+    
+    /* Tooltip */
+    .tooltip{position:relative}
+    .tooltip:hover::after{content:attr(data-tooltip);position:absolute;bottom:100%;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--panel);padding:6px 10px;border-radius:6px;font-size:12px;white-space:nowrap;z-index:1000;pointer-events:none}
+    .tooltip:hover::before{content:'';position:absolute;bottom:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--ink);z-index:1000}
   </style>
 </head>
 <body>
@@ -193,7 +220,7 @@
     </div>
   </div>
 
-  <div class="layout">
+  <div class="layout" id="mainLayout">
     <div class="topbar">
       <button class="menu-btn" id="menuBtn" aria-label="Menu"><i class="fas fa-bars"></i></button>
       <div class="brand"><span class="badge">RR</span><span>Cable Shop</span></div>
@@ -201,19 +228,43 @@
     </div>
 
     <aside class="sidebar" id="sidebar">
-      <div class="brand"><span class="badge">RR</span><span>Cable Shop</span></div>
+      <div class="sidebar-header">
+        <div class="brand">
+          <span class="badge">RR</span>
+          <span>Cable Shop</span>
+        </div>
+        <button class="sidebar-toggle tooltip" id="sidebarToggle" data-tooltip="Toggle Sidebar" aria-label="Toggle Sidebar">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
       <nav class="nav">
-        <button class="active" data-target="home"><i class="fas fa-home" style="margin-right:8px"></i>Home</button>
-        <button data-target="selector"><i class="fas fa-calculator" style="margin-right:8px"></i>Reel Selector</button>
-        <button data-target="dimension"><i class="fas fa-ruler-combined" style="margin-right:8px"></i>Reel Dimension</button>
-        <button data-target="standard"><i class="fas fa-list" style="margin-right:8px"></i>Standard Wood Reel</button>
-        <button data-target="copper"><i class="fas fa-exchange-alt" style="margin-right:8px"></i>Copper Conversion</button>
+        <button class="active" data-target="home">
+          <i class="fas fa-home"></i>
+          <span>Home</span>
+        </button>
+        <button data-target="selector">
+          <i class="fas fa-calculator"></i>
+          <span>Reel Selector</span>
+        </button>
+        <button data-target="dimension">
+          <i class="fas fa-ruler-combined"></i>
+          <span>Reel Dimension</span>
+        </button>
+        <button data-target="standard">
+          <i class="fas fa-list"></i>
+          <span>Standard Wood Reel</span>
+        </button>
+        <button data-target="copper">
+          <i class="fas fa-exchange-alt"></i>
+          <span>Copper Conversion</span>
+        </button>
       </nav>
     </aside>
 
     <main class="content">
       <div class="app">
-        <div class="hdr">
+        <!-- Mobile Header (only visible on mobile) -->
+        <div class="mobile-hdr">
           <h1 class="title3d">RR Cable Shop</h1>
           <div class="powered">Powered by <b>RR Operations Team</b></div>
         </div>
@@ -265,6 +316,10 @@
 
         <!-- 01. Reel Selector -->
         <section id="selector" class="page">
+          <div class="page-title">
+            <i class="fas fa-calculator"></i>
+            <span>Reel Selector</span>
+          </div>
           <details class="acd" open>
             <summary>01. Reel Selector</summary>
             <div class="acd-body">
@@ -326,6 +381,10 @@
 
         <!-- 02. Reel Dimension -->
         <section id="dimension" class="page">
+          <div class="page-title">
+            <i class="fas fa-ruler-combined"></i>
+            <span>Reel Dimension</span>
+          </div>
           <details class="acd" open>
             <summary>02. Reel Dimension</summary>
             <div class="acd-body">
@@ -366,6 +425,10 @@
 
         <!-- 03. Standard Wood Reel -->
         <section id="standard" class="page">
+          <div class="page-title">
+            <i class="fas fa-list"></i>
+            <span>Standard Wood Reel</span>
+          </div>
           <details class="acd" open>
             <summary>03. Standard Wood Reel</summary>
             <div class="acd-body">
@@ -392,6 +455,10 @@
 
         <!-- 04. Copper Rod Conversion -->
         <section id="copper" class="page">
+          <div class="page-title">
+            <i class="fas fa-exchange-alt"></i>
+            <span>Copper Conversion</span>
+          </div>
           <details class="acd" open>
             <summary>04. Copper Rod Conversion</summary>
             <div class="acd-body">
@@ -479,13 +546,45 @@
       notification.className = `notification ${type}`;
       notificationText.textContent = message;
       
+      // Update icon based on type
       const icon = notification.querySelector('i');
       icon.className = type === 'success' ? 'fas fa-check-circle' : 
                       type === 'error' ? 'fas fa-exclamation-circle' : 
                       'fas fa-info-circle';
       
       notification.classList.add('show');
-      setTimeout(() => { notification.classList.remove('show'); }, 3000);
+      
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, 3000);
+    }
+
+    /* ===== Sidebar Toggle ===== */
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    const mainLayout = document.getElementById('mainLayout');
+    let isSidebarCollapsed = false;
+
+    function toggleSidebar() {
+      isSidebarCollapsed = !isSidebarCollapsed;
+      sidebar.classList.toggle('collapsed');
+      mainLayout.classList.toggle('sidebar-collapsed');
+      
+      // Update icon
+      const icon = sidebarToggle.querySelector('i');
+      icon.className = isSidebarCollapsed ? 'fas fa-chevron-right' : 'fas fa-bars';
+      
+      // Save preference
+      localStorage.setItem('sidebarCollapsed', isSidebarCollapsed);
+      
+      showNotification(isSidebarCollapsed ? 'Sidebar minimized' : 'Sidebar expanded', 'info');
+    }
+
+    sidebarToggle.addEventListener('click', toggleSidebar);
+
+    // Load sidebar state from localStorage
+    if (localStorage.getItem('sidebarCollapsed') === 'true') {
+      toggleSidebar();
     }
 
     /* ===== PIN logic ===== */
@@ -514,8 +613,6 @@
     }
     document.getElementById('unlockBtn').addEventListener('click', tryUnlock);
     document.getElementById('pin').addEventListener('keydown', (e)=>{ if(e.key==='Enter') tryUnlock() });
-    // ESC clears error (small UX polish)
-    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape'){ const err=document.getElementById('gateErr'); if(err) err.textContent=''; }});
     if(sessionStorage.getItem('reel_unlocked')==='1') hideGate(); else showGate();
 
     /* ===== Navigation (sidebar & pages) ===== */
@@ -527,21 +624,32 @@
         buttons.forEach(b=> b.classList.toggle('active', b.dataset.target===id));
         const openDetails = document.querySelector('#'+id+' details.acd');
         if(openDetails) openDetails.setAttribute('open','');
-        document.body.classList.remove('menu-open');
+        
+        // Auto-expand sidebar on mobile when navigating
+        if(window.innerWidth <= 900) {
+          sidebar.classList.add('mobile-open');
+        }
+        
         window.scrollTo({top:0,behavior:'smooth'});
       }
       buttons.forEach(btn=> btn.addEventListener('click',()=> showPage(btn.dataset.target)));
       const menuBtn = document.getElementById('menuBtn');
-      if(menuBtn){ menuBtn.addEventListener('click', ()=> document.body.classList.toggle('menu-open')); }
-      // Close mobile drawer when clicking outside
-      document.addEventListener('click', (e)=>{
-        if (!document.body.classList.contains('menu-open')) return;
-        const sb = document.getElementById('sidebar');
-        const tb = document.getElementById('menuBtn');
-        if (!sb.contains(e.target) && !tb.contains(e.target)) {
-          document.body.classList.remove('menu-open');
+      if(menuBtn){ 
+        menuBtn.addEventListener('click', ()=> { 
+          sidebar.classList.toggle('mobile-open');
+        }); 
+      }
+      
+      // Close mobile sidebar when clicking outside
+      document.addEventListener('click', (e) => {
+        if(window.innerWidth <= 900 && 
+           !sidebar.contains(e.target) && 
+           !menuBtn.contains(e.target) && 
+           sidebar.classList.contains('mobile-open')) {
+          sidebar.classList.remove('mobile-open');
         }
       });
+      
       showPage('home');
     })();
 
@@ -556,7 +664,7 @@
       const todayBtn = document.getElementById('calToday');
       const card = document.getElementById('calCard');
 
-      const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+      const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
       const DAYS   = ['S','M','T','W','T','F','S'];
 
       let current = new Date();
@@ -616,12 +724,15 @@
       function rnd(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
 
       function genQuestion(){
+        // Normal level: +, −, × using 1–2 digit numbers, avoid negatives
         const ops = ['+','-','×'];
         const op = ops[rnd(0,ops.length-1)];
         let a = rnd(4,99), b = rnd(3,12);
         if(op==='+'){ b = rnd(4,99); currentAns = a + b; }
         else if(op==='-'){ if(b>a){ const t=a; a=b; b=t; } currentAns = a - b; }
-        else { a = rnd(4,12); b = rnd(3,12); currentAns = a * b; }
+        else { // ×
+          a = rnd(4,12); b = rnd(3,12); currentAns = a * b;
+        }
         qText.textContent = `${a} ${op} ${b} = ?`;
       }
 
@@ -643,6 +754,7 @@
       }
 
       function startPractice(){
+        // practice mode (no timer)
         running = false; clearInterval(timer); tEl.textContent = '∞';
         setGameUI(true); start.disabled=false; stop.disabled=true;
         msg.textContent = 'Practice mode — unlimited time.'; msg.className='hint';
@@ -671,7 +783,7 @@
         const v = Number(ans.value);
         if(!Number.isFinite(v)){ msg.textContent='Enter a number.'; msg.className='hint err'; return; }
         if(v === currentAns){
-          correct++; streak++; score += (running? 2 : 1) + Math.min(streak,5);
+          correct++; streak++; score += (running? 2 : 1) + Math.min(streak,5); // small streak bonus
           msg.textContent='Correct!'; msg.className='hint ok';
         }else{
           wrong++; streak=0; score = Math.max(0, score-1);
@@ -684,14 +796,16 @@
 
       function nextQuestion(){ msg.textContent=''; genQuestion(); ans.value=''; ans.focus(); }
 
+      // wire
       submit.addEventListener('click', submitAnswer);
       next.addEventListener('click', nextQuestion);
       ans.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ submitAnswer(); } });
       start.addEventListener('click', start60s);
       stop.addEventListener('click', stopNow);
 
+      // init
       correct=wrong=score=streak=0; updateStats(); setGameUI(false);
-      genQuestion(); startPractice();
+      genQuestion(); startPractice(); // default: practice ready
     })();
   </script>
 
@@ -815,29 +929,6 @@
     async function copyRegular(){ const box=document.getElementById('r-out'); const btn=document.getElementById('r-copy'); const txt=box.innerText.trim(); if(!txt){btn.textContent='Copy';return} await copyText(txt); }
     async function copyCustom(){ const box=document.getElementById('c-out'); const btn=document.getElementById('c-copy'); const txt=box.innerText.trim(); if(!txt){btn.textContent='Copy';return} await copyText(txt); }
 
-    // Auto-populate Standard table on first open or when page becomes active
-    (function(){
-      const stdPage = document.getElementById('standard');
-      // populate immediately if already active (e.g., deep link)
-      if (stdPage.classList.contains('active')) { buildReelTable(); }
-      const observer = new MutationObserver(() => {
-        if (stdPage.classList.contains('active')) { buildReelTable(); }
-      });
-      observer.observe(stdPage, { attributes:true, attributeFilter:['class'] });
-    })();
-
-    // Enter to calculate: Regular & Custom panels
-    (function(){
-      ['r-cable-od','r-length'].forEach(id=>{
-        const el = document.getElementById(id);
-        el.addEventListener('keydown', e=>{ if(e.key==='Enter') computeRegular(); });
-      });
-      ['c-cable-od','c-rod','c-rid','c-trv'].forEach(id=>{
-        const el = document.getElementById(id);
-        el.addEventListener('keydown', e=>{ if(e.key==='Enter') computeCustom(); });
-      });
-    })();
-
     // Self-tests (console)
     (function(){
       try {
@@ -876,6 +967,10 @@
       var kgpmEl = el('cu-kgpm');
       var resHead= el('cu-result-head');
       var resSub = el('cu-result-sub');
+
+      var btnReset = el('cu-reset');
+      var btnCopy  = el('cu-copy');
+      var btnSwap  = el('cu-quickSwap');
 
       function setType(type){
         var isStrip = type === 'Strip';
@@ -964,6 +1059,7 @@
         updateGivenUI(); compute();
       }
 
+      // Events
       tStrip.addEventListener('click', function(){ setType('Strip'); });
       tRod.addEventListener('click',   function(){ setType('Rod');   });
       tRM.addEventListener('click',    function(){ setType('RM');    });
@@ -976,6 +1072,7 @@
       });
       document.getElementById('cu-quickSwap').addEventListener('click', swap);
 
+      // Init
       setType('Strip'); updateGivenUI(); compute();
     })();
   </script>
