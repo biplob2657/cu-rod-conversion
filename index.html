@@ -256,6 +256,11 @@
           <i class="fas fa-exchange-alt"></i>
           <span>Copper Conversion</span>
         </button>
+        <!-- NEW: PVC page button -->
+        <button data-target="pvc">
+          <i class="fas fa-weight-hanging"></i>
+          <span>Cable PVC Weight</span>
+        </button>
       </nav>
     </aside>
 
@@ -507,6 +512,103 @@
           </div>
         </section>
 
+        <!-- 05. Cable PVC Weight -->
+        <section id="pvc" class="page">
+          <div class="page-title">
+            <i class="fas fa-weight-hanging"></i>
+            <span>Cable PVC Weight</span>
+          </div>
+
+          <div class="card">
+            <div class="seg" style="margin-bottom:14px">
+              <button id="pv-mode-sc" class="active">Single-core</button>
+              <button id="pv-mode-mc">Multicore</button>
+            </div>
+
+            <!-- Density & Length (shared) -->
+            <div class="grid">
+              <div>
+                <label>Density (g/cm³)</label>
+                <input id="pv-rho" type="number" step="0.01" min="0" value="1.55">
+              </div>
+              <div>
+                <label>Length (m)</label>
+                <input id="pv-L" type="number" step="1" min="0" value="1000">
+              </div>
+            </div>
+          </div>
+
+          <!-- Single-core -->
+          <div id="pv-sc" class="card">
+            <div class="grid">
+              <div>
+                <label>Bare Cu OD (mm)</label>
+                <input id="pv-sc-cu" type="number" step="0.01" min="0" placeholder="e.g., 16.5">
+              </div>
+              <div>
+                <label>Insulation thickness (mm)</label>
+                <input id="pv-sc-ins" type="number" step="0.01" min="0" placeholder="e.g., 2.0">
+              </div>
+              <div>
+                <label>Sheath thickness (mm)</label>
+                <input id="pv-sc-sh" type="number" step="0.01" min="0" placeholder="e.g., 2.0">
+              </div>
+            </div>
+
+            <div class="row">
+              <button class="btn" id="pv-sc-calc">Calculate</button>
+              <button class="btn-ghost" id="pv-sc-reset">Reset</button>
+              <button class="btn-ghost" id="pv-sc-copy">Copy</button>
+            </div>
+
+            <div class="result mono" id="pv-sc-out"></div>
+            <div class="note">PVC mass includes insulation + outer sheath. Uses exact ring geometry.</div>
+          </div>
+
+          <!-- Multicore -->
+          <div id="pv-mc" class="card" style="display:none">
+            <div class="grid">
+              <div>
+                <label>Number of cores</label>
+                <input id="pv-mc-n" type="number" step="1" min="1" value="4">
+              </div>
+              <div>
+                <label>Bare Cu OD per core (mm)</label>
+                <input id="pv-mc-cu" type="number" step="0.01" min="0" placeholder="e.g., 4.7">
+              </div>
+              <div>
+                <label>Insulation thickness (mm)</label>
+                <input id="pv-mc-ins" type="number" step="0.01" min="0" placeholder="e.g., 1.0">
+              </div>
+              <div>
+                <label>Inner sheath thickness (mm)</label>
+                <input id="pv-mc-inner" type="number" step="0.01" min="0" placeholder="e.g., 1.2">
+              </div>
+              <div>
+                <label>Outer sheath thickness (mm)</label>
+                <input id="pv-mc-sh" type="number" step="0.01" min="0" placeholder="e.g., 2.0">
+              </div>
+              <div>
+                <label>Inner OD before inner sheath (mm) <span style="color:var(--muted)">(optional)</span></label>
+                <input id="pv-mc-innerOD" type="number" step="0.01" min="0" placeholder="If known">
+              </div>
+            </div>
+
+            <div class="row">
+              <button class="btn" id="pv-mc-calc">Calculate</button>
+              <button class="btn-ghost" id="pv-mc-est">Estimate Inner OD</button>
+              <button class="btn-ghost" id="pv-mc-reset">Reset</button>
+              <button class="btn-ghost" id="pv-mc-copy">Copy</button>
+            </div>
+
+            <div class="result mono" id="pv-mc-out"></div>
+            <div class="note">
+              Total PVC = N×(insulation) + inner sheath + outer sheath.  
+              If “Inner OD” is blank, Estimate supports N = 1..4 using a packing allowance.
+            </div>
+          </div>
+        </section>
+
       </div> <!-- /.app -->
     </main>
   </div> <!-- /.layout -->
@@ -598,7 +700,7 @@
     /* ===== Navigation (sidebar & pages) ===== */
     (function(){
       const buttons = document.querySelectorAll('.sidebar .nav button');
-      const pages = ['home','selector','dimension','standard','copper'];
+      const pages = ['home','selector','dimension','standard','copper','pvc']; // ← added 'pvc'
       function showPage(id){
         pages.forEach(p=>{ const sec=document.getElementById(p); if(sec) sec.classList.toggle('active', p===id); });
         buttons.forEach(b=> b.classList.toggle('active', b.dataset.target===id));
@@ -1052,6 +1154,155 @@
 
       // Init
       setType('Strip'); updateGivenUI(); compute();
+    })();
+  </script>
+
+  <!-- ===== PVC Weight Calculator ===== -->
+  <script>
+    (function(){
+      const pi = Math.PI;
+
+      // helpers
+      const ringArea = (Do, Di) => (pi/4) * (Do*Do - Di*Di);                 // mm²
+      const kgFrom   = (area_mm2, L_m, rho_gcc) => area_mm2 * L_m * (rho_gcc/1000); // kg
+      const fmt = n => Number(n).toLocaleString(undefined,{maximumFractionDigits:3});
+      const g = id => document.getElementById(id);
+
+      // shared
+      const rho = g('pv-rho');
+      const L   = g('pv-L');
+
+      // mode toggle
+      const bSC = g('pv-mode-sc');
+      const bMC = g('pv-mode-mc');
+      const sc  = g('pv-sc');
+      const mc  = g('pv-mc');
+
+      bSC.addEventListener('click', ()=>{ bSC.classList.add('active'); bMC.classList.remove('active'); sc.style.display='block'; mc.style.display='none'; });
+      bMC.addEventListener('click', ()=>{ bMC.classList.add('active'); bSC.classList.remove('active'); sc.style.display='none'; mc.style.display='block'; });
+
+      /* --- Single-core --- */
+      const scCU  = g('pv-sc-cu');
+      const scINS = g('pv-sc-ins');
+      const scSH  = g('pv-sc-sh');
+      const scOut = g('pv-sc-out');
+
+      function calcSC(){
+        const d_cu  = +scCU.value;
+        const t_ins = +scINS.value;
+        const t_sh  = +scSH.value;
+        const len   = +L.value;
+        const r     = +rho.value;
+
+        if(!(d_cu>0 && t_ins>=0 && t_sh>=0 && len>=0 && r>0)){ scOut.textContent = 'Enter valid inputs.'; return; }
+
+        const d_ins = d_cu + 2*t_ins;
+        const d_fin = d_ins + 2*t_sh;
+
+        const A_ins = ringArea(d_ins, d_cu);
+        const A_sh  = ringArea(d_fin, d_ins);
+        const A_tot = A_ins + A_sh;
+
+        const kg_m  = kgFrom(A_tot, 1, r);
+        const kg_L  = kgFrom(A_tot, len, r);
+
+        scOut.innerHTML = `
+          Insulated OD = <b>${fmt(d_ins)}</b> mm, Final OD = <b>${fmt(d_fin)}</b> mm<br>
+          Areas (mm²): Insulation <b>${fmt(A_ins)}</b> · Sheath <b>${fmt(A_sh)}</b> · Total <b>${fmt(A_tot)}</b><br>
+          PVC = <b>${fmt(kg_m)}</b> kg/m · <b>${fmt(kg_L)}</b> kg for ${fmt(len)} m
+        `;
+      }
+      g('pv-sc-calc').addEventListener('click', calcSC);
+      g('pv-sc-reset').addEventListener('click', ()=>{ scCU.value=''; scINS.value=''; scSH.value=''; scOut.textContent=''; });
+      g('pv-sc-copy').addEventListener('click', ()=>{
+        const t = scOut.innerText.trim(); if(!t) return;
+        navigator.clipboard.writeText(t).then(()=> window.showNotification?.('Copied!', 'success'));
+      });
+
+      /* --- Multicore --- */
+      const mcN    = g('pv-mc-n');
+      const mcCU   = g('pv-mc-cu');
+      const mcINS  = g('pv-mc-ins');
+      const mcInTh = g('pv-mc-inner');
+      const mcSH   = g('pv-mc-sh');
+      const mcInOD = g('pv-mc-innerOD');
+      const mcOut  = g('pv-mc-out');
+
+      function estimateInnerOD(){
+        const N     = +mcN.value;
+        const d_cu  = +mcCU.value;
+        const t_ins = +mcINS.value;
+
+        if(!(N>=1 && d_cu>0 && t_ins>=0)){ mcOut.textContent='Enter N, Bare OD, Insulation first.'; return; }
+        const d_ins = d_cu + 2*t_ins;
+
+        // base geometric pack (no gaps)
+        let k = 0;
+        if(N===1) k = 1.000;
+        else if(N===2) k = 2.000;
+        else if(N===3) k = 2.155;     // 2*(1/√3 + 1/2)
+        else if(N===4) k = 2.414;     // 1 + √2
+        else { mcOut.textContent='Estimator supports N=1..4; please enter Inner OD manually.'; return; }
+
+        const fill = 1.05; // 5% allowance for lay/voids
+        const D    = k * d_ins * fill;
+        mcInOD.value = D.toFixed(2);
+        window.showNotification?.('Inner OD estimated', 'info');
+      }
+
+      function calcMC(){
+        const N     = +mcN.value;
+        const d_cu  = +mcCU.value;
+        const t_ins = +mcINS.value;
+        const t_in  = +mcInTh.value;
+        const t_sh  = +mcSH.value;
+        const D_in  = +mcInOD.value; // OD before inner sheath
+        const len   = +L.value;
+        const r     = +rho.value;
+
+        if(!(N>=1 && d_cu>0 && t_ins>=0 && t_in>=0 && t_sh>=0 && len>=0 && r>0)){
+          mcOut.textContent = 'Enter valid inputs.'; return;
+        }
+
+        const d_ins = d_cu + 2*t_ins;
+        let D_bundle = D_in;
+        if(!(D_bundle>0)){
+          // try estimate for N=1..4 if user didn’t give inner OD
+          let k=0;
+          if(N===1) k=1.000; else if(N===2) k=2.000; else if(N===3) k=2.155; else if(N===4) k=2.414;
+          if(k===0){ mcOut.textContent='Provide Inner OD or use Estimate (N=1..4).'; return; }
+          D_bundle = k * d_ins * 1.05;
+        }
+
+        const D_innerSheathOD = D_bundle + 2*t_in;
+        const D_final         = D_innerSheathOD + 2*t_sh;
+
+        // PVC areas
+        const A_insTot  = N * ringArea(d_ins, d_cu);
+        const A_inner   = ringArea(D_innerSheathOD, D_bundle);
+        const A_outer   = ringArea(D_final, D_innerSheathOD);
+        const A_tot     = A_insTot + A_inner + A_outer;
+
+        const kg_m      = kgFrom(A_tot, 1, r);
+        const kg_L      = kgFrom(A_tot, len, r);
+
+        mcOut.innerHTML = `
+          Per-core insulated OD = <b>${fmt(d_ins)}</b> mm · Bundle Inner OD = <b>${fmt(D_bundle)}</b> mm<br>
+          Inner sheath OD = <b>${fmt(D_innerSheathOD)}</b> mm · Final OD = <b>${fmt(D_final)}</b> mm<br>
+          Areas (mm²): N×Ins <b>${fmt(A_insTot)}</b> · Inner <b>${fmt(A_inner)}</b> · Outer <b>${fmt(A_outer)}</b> · Total <b>${fmt(A_tot)}</b><br>
+          PVC = <b>${fmt(kg_m)}</b> kg/m · <b>${fmt(kg_L)}</b> kg for ${fmt(len)} m
+        `;
+      }
+
+      g('pv-mc-est').addEventListener('click', estimateInnerOD);
+      g('pv-mc-calc').addEventListener('click', calcMC);
+      g('pv-mc-reset').addEventListener('click', ()=>{
+        mcN.value=4; mcCU.value=''; mcINS.value=''; mcInTh.value=''; mcSH.value=''; mcInOD.value=''; mcOut.textContent='';
+      });
+      g('pv-mc-copy').addEventListener('click', ()=>{
+        const t = mcOut.innerText.trim(); if(!t) return;
+        navigator.clipboard.writeText(t).then(()=> window.showNotification?.('Copied!', 'success'));
+      });
     })();
   </script>
 </body>
