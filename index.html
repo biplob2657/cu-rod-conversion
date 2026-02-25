@@ -3,243 +3,1031 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"/>
-  <title>RR Cable Shop</title>
+  <title>RR Operations Team</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    :root{ 
-      --bg:#f8fafc; 
-      --panel:#ffffff; 
-      --ink:#1e293b; 
-      --muted:#64748b; 
-      --line:#e2e8f0; 
-      --btn:#1e293b; 
-      --btn-ink:#fff; 
-      --red:#dc2626;
-      --primary:#3b82f6;
-      --primary-dark:#2563eb;
-      --secondary:#8b5cf6;
-      --accent:#f59e0b;
-      --success:#10b981;
-      --warning:#f59e0b;
-      --error:#ef4444;
-      --gradient:linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      --card-shadow:0 10px 30px rgba(0,0,0,0.08);
-      --hover-shadow:0 20px 40px rgba(0,0,0,0.12);
-      --transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      --sidebar-width:280px;
-      --sidebar-collapsed:70px;
+    :root {
+      --bg: #0a0a0f;
+      --bg-elevated: #12121a;
+      --panel: #1a1a24;
+      --panel-hover: #22222e;
+      --ink: #f4f4f6;
+      --ink-secondary: #a0a0b0;
+      --muted: #6b6b7a;
+      --line: #2a2a38;
+      --accent: #d4a853;
+      --accent-glow: rgba(212, 168, 83, 0.3);
+      --success: #4ade80;
+      --error: #f87171;
+      --info: #60a5fa;
+      --gradient: linear-gradient(135deg, #d4a853 0%, #b8860b 100%);
+      --card-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+      --hover-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+      --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      --sidebar-width: 260px;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
     }
-    
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{margin:0;background:var(--bg);color:var(--ink);font-family:'Inter', system-ui, -apple-system, sans-serif;font-weight:400;line-height:1.6;letter-spacing:-0.01em}
 
-    /* ===== Shell (sidebar + content) ===== */
-    .layout{max-width:1400px;margin:0 auto;display:flex;gap:20px;padding:20px;transition:var(--transition)}
-    .layout.sidebar-collapsed{padding-left:80px}
-    .sidebar{width:var(--sidebar-width);background:var(--panel);border-radius:20px;padding:24px;box-shadow:var(--card-shadow);position:fixed;left:20px;top:20px;height:calc(100vh - 40px);z-index:40;transition:var(--transition);backdrop-filter:blur(10px);background:rgba(255,255,255,0.9);border:1px solid rgba(255,255,255,0.2);overflow:hidden}
-    .sidebar.collapsed{width:var(--sidebar-collapsed);padding:16px 12px}
-    .sidebar-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
-    .brand{font-weight:900;font-size:24px;letter-spacing:-0.02em;display:flex;align-items:center;gap:12px;transition:var(--transition)}
-    .sidebar.collapsed .brand{font-size:18px;justify-content:center}
-    .brand .badge{background:var(--gradient);color:#fff;padding:8px 14px;border-radius:12px;font-size:18px;box-shadow:0 4px 12px rgba(102, 126, 234, 0.4);transition:var(--transition)}
-    .sidebar.collapsed .brand .badge{padding:6px 8px;font-size:14px}
-    .sidebar.collapsed .brand span:not(.badge){display:none}
-    .sidebar-toggle{width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:var(--panel);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--transition)}
-    .sidebar-toggle:hover{background:var(--bg);transform:scale(1.05)}
-    .nav{display:flex;flex-direction:column;gap:10px}
-    .nav button{appearance:none;border:none;background:transparent;color:var(--ink);text-align:left;padding:14px 16px;border-radius:14px;font-weight:600;cursor:pointer;transition:var(--transition);position:relative;overflow:hidden;display:flex;align-items:center;gap:12px}
-    .sidebar.collapsed .nav button{justify-content:center;padding:12px}
-    .nav button i{font-size:18px;width:20px;text-align:center}
-    .nav button span{transition:var(--transition)}
-    .sidebar.collapsed .nav button span{display:none}
-    .nav button:before{content:'';position:absolute;top:0;left:0;width:0;height:100%;background:var(--gradient);transition:width 0.3s;z-index:-1}
-    .nav button:hover:before{width:100%}
-    .nav button:hover{color:#fff;transform:translateX(5px)}
-    .sidebar.collapsed .nav button:hover{transform:scale(1.05)}
-    .nav button.active{background:var(--gradient);color:#fff;box-shadow:0 4px 12px rgba(102, 126, 234, 0.3)}
-    .sidebar.collapsed .nav button.active{padding:12px}
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-    .content{flex:1;margin-left:calc(var(--sidebar-width) + 20px);transition:var(--transition)}
-    .layout.sidebar-collapsed .content{margin-left:calc(var(--sidebar-collapsed) + 20px)}
-    
-    /* Main Header - Visible on Desktop */
-    .hdr{text-align:center;margin-bottom:24px}
-    .title3d{margin:0;font-size:36px;letter-spacing:-0.02em;line-height:1.1;color:var(--ink);position:relative;font-weight:900;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-    .title3d:after{content:"";display:block;width:120px;height:4px;background:var(--gradient);margin:12px auto 0;border-radius:2px}
-    .powered{margin-top:8px;color:var(--muted);font-size:14px}
-    
-    /* Page titles */
-    .page-title{font-size:22px;font-weight:700;margin-bottom:16px;color:var(--ink);display:flex;align-items:center;gap:10px}
-    .page-title i{color:var(--primary)}
+    html, body {
+      height: 100%;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+      font-weight: 400;
+      line-height: 1.6;
+      letter-spacing: -0.01em;
+      overflow-x: hidden;
+    }
+
+    /* Background atmosphere */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(ellipse at 30% 20%, rgba(212, 168, 83, 0.04) 0%, transparent 50%),
+                  radial-gradient(ellipse at 70% 80%, rgba(212, 168, 83, 0.03) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Layout */
+    .layout {
+      display: flex;
+      min-height: 100vh;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: var(--sidebar-width);
+      background: var(--bg-elevated);
+      border-right: 1px solid var(--line);
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      transition: var(--transition);
+    }
+
+    .sidebar-header {
+      padding: 24px 20px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-logo {
+      width: 44px;
+      height: 44px;
+      background: var(--gradient);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--bg);
+      box-shadow: 0 4px 16px var(--accent-glow);
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-name {
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--ink);
+      letter-spacing: -0.02em;
+    }
+
+    .brand-tagline {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .nav {
+      flex: 1;
+      padding: 16px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      overflow-y: auto;
+    }
+
+    .nav-section {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 16px 12px 8px;
+    }
+
+    .nav button {
+      appearance: none;
+      border: none;
+      background: transparent;
+      color: var(--ink-secondary);
+      text-align: left;
+      padding: 12px 14px;
+      border-radius: var(--radius-md);
+      font-weight: 500;
+      font-size: 14px;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: inherit;
+      position: relative;
+    }
+
+    .nav button i {
+      width: 20px;
+      text-align: center;
+      font-size: 16px;
+      opacity: 0.7;
+      transition: var(--transition);
+    }
+
+    .nav button:hover {
+      background: var(--panel);
+      color: var(--ink);
+    }
+
+    .nav button:hover i {
+      opacity: 1;
+    }
+
+    .nav button.active {
+      background: var(--panel);
+      color: var(--accent);
+    }
+
+    .nav button.active i {
+      opacity: 1;
+    }
+
+    .nav button.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3px;
+      height: 20px;
+      background: var(--accent);
+      border-radius: 0 2px 2px 0;
+    }
+
+    /* Main content */
+    .content {
+      flex: 1;
+      margin-left: var(--sidebar-width);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    .main-header {
+      padding: 20px 32px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(10, 10, 15, 0.8);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .page-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .page-title h1 {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -0.02em;
+    }
+
+    .page-title i {
+      color: var(--accent);
+      font-size: 20px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-time {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: var(--muted);
+      padding: 8px 14px;
+      background: var(--panel);
+      border-radius: var(--radius-sm);
+    }
+
+    /* Main area */
+    .main-area {
+      flex: 1;
+      padding: 24px 32px;
+    }
 
     /* Pages */
-    .page{display:none;animation:fadeIn 0.5s ease}
-    .page.active{display:block}
-    @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-
-    /* Compact Calendar */
-    .cal{background:var(--panel);border-radius:16px;padding:12px;box-shadow:var(--card-shadow);backdrop-filter:blur(10px);background:rgba(255,255,255,0.9);border:1px solid rgba(255,255,255,0.2)}
-    .cal-head{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:8px}
-    .cal-title{display:flex;align-items:center;gap:8px;font-weight:600;font-size:16px}
-    .cal-head .btn-icon{width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:var(--panel);cursor:pointer;font-size:14px;transition:var(--transition);display:flex;align-items:center;justify-content:center}
-    .cal-head .btn-icon:hover{background:var(--bg);transform:scale(1.05)}
-    .cal-when{display:flex;gap:6px}
-    .cal-when select,.cal-when input{padding:6px 8px;border-radius:8px;border:1px solid var(--line);background:var(--panel);transition:var(--transition);font-size:14px}
-    .cal-when select:focus,.cal-when input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(59, 130, 246, 0.1)}
-    .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
-    .cal-grid .cell{aspect-ratio:1/1;border:1px solid var(--line);border-radius:8px;display:flex;align-items:center;justify-content:center;transition:var(--transition);cursor:pointer;font-size:13px}
-    .cal-grid .cell:hover{background:var(--bg);transform:scale(1.05)}
-    .cal-grid .dow{font-weight:600;background:var(--bg);color:var(--muted);font-size:11px}
-    .cal-grid .muted{color:#ccc}
-    .cal-grid .today{border-color:var(--primary);background:rgba(59, 130, 246, 0.1);color:var(--primary);font-weight:600;box-shadow:0 0 0 2px rgba(59, 130, 246, 0.2)}
-
-    /* Brain Game */
-    .game{background:var(--panel);border-radius:16px;padding:16px;box-shadow:var(--card-shadow);margin-top:16px;backdrop-filter:blur(10px);background:rgba(255,255,255,0.9);border:1px solid rgba(255,255,255,0.2)}
-    .game h3{margin:0 0 12px 0;font-size:18px;font-weight:700}
-    .game-row{display:grid;grid-template-columns:1fr;gap:12px}
-    .q{font-size:24px;font-weight:800;letter-spacing:-0.02em;margin-bottom:12px}
-    .stat{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-    .pill{border:1px solid var(--line);border-radius:10px;padding:8px 12px;background:var(--panel);font-weight:500;font-size:14px}
-    .ok{color:var(--success)}.err{color:var(--error)}
-    .game .row{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:end}
-    .hint{font-size:12px;color:var(--muted);margin-top:6px}
-
-    /* Mobile nav: off-canvas */
-    .topbar{display:none}
-    @media (max-width:900px){
-      .layout{flex-direction:column;padding:0}
-      .layout.sidebar-collapsed{padding-left:0}
-      .topbar{display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px 20px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel);z-index:20;box-shadow:0 4px 12px rgba(0,0,0,0.05)}
-      .topbar .title3d{font-size:24px;margin:0}
-      .topbar .powered{font-size:12px;margin:0}
-      .menu-btn{position:absolute;left:20px;top:50%;transform:translateY(-50%);border:1px solid var(--line);background:var(--panel);padding:10px 14px;border-radius:12px;font-weight:600;transition:var(--transition)}
-      .menu-btn:hover{background:var(--bg)}
-      .sidebar{position:fixed;left:0;top:0;bottom:0;transform:translateX(-100%);transition:transform 0.3s ease;width:min(80%,320px);z-index:30;box-shadow:0 0 30px rgba(0,0,0,0.2);border-radius:0}
-      .sidebar.mobile-open{transform:translateX(0)}
-      .content{margin-left:0}
-      .hdr{display:none} /* Hide desktop header on mobile */
+    .page {
+      display: none;
+      animation: pageIn 0.4s ease;
     }
 
-    /* Buttons, inputs */
-    .btn{background:var(--gradient);color:var(--btn-ink);border:none;cursor:pointer;font-weight:600;letter-spacing:-0.01em;padding:10px 14px;border-radius:10px;transition:var(--transition);position:relative;overflow:hidden;font-size:14px}
-    .btn:before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(255,255,255,0.2);transform:translateX(-100%);transition:transform 0.3s}
-    .btn:hover:before{transform:translateX(0)}
-    .btn:hover{transform:translateY(-2px);box-shadow:0 10px 20px rgba(0,0,0,0.1)}
-    .btn-ghost{background:var(--panel);color:var(--ink);border:1px solid var(--line);font-weight:500}
-    .btn-ghost:hover{background:var(--bg);transform:translateY(-2px)}
-    input,button,select{font-size:16px;font-family:'Inter', sans-serif}
-    input[type=number], input[type=text]{width:100%;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--ink);transition:var(--transition)}
-    input[type=number]:focus, input[type=text]:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(59, 130, 246, 0.1)}
+    .page.active {
+      display: block;
+    }
 
-    /* Existing cards / controls for calculators */
-    .card{background:var(--panel);border-radius:14px;padding:16px;box-shadow:var(--card-shadow);margin-bottom:16px;backdrop-filter:blur(10px);background:rgba(255,255,255,0.9);border:1px solid rgba(255,255,255,0.2)}
-    .grid{display:grid;grid-template-columns:1fr;gap:14px}
-    @media (min-width:560px){.grid{grid-template-columns:1fr 1fr}}
+    @keyframes pageIn {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
-    .row{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:end;margin-top:14px}
-    .result{margin-top:14px;border-top:1px dashed var(--line);padding-top:14px}
-    .caps{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    @media (max-width:480px){.caps{grid-template-columns:1fr}}
-    .mono{font-variant-numeric:tabular-nums}
-    .tbl{width:100%;border-collapse:collapse;margin-top:14px}
-    .tbl th,.tbl td{border-bottom:1px solid var(--line);padding:10px 6px;text-align:left}
-    .tbl th{font-weight:600;color:var(--muted)}
-    .note{color:var(--muted);font-size:12px;margin-top:6px}
-    .seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
-    .seg button{padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--panel);font-weight:500;transition:var(--transition)}
-    .seg button:hover{background:var(--bg)}
-    .seg button.active{background:var(--gradient);color:#fff;border-color:transparent}
-    .svg-wrap{width:100%;overflow:auto}
+    /* Cards */
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 20px;
+      transition: var(--transition);
+    }
 
-    /* PIN gate */
-    #gate{position:fixed;inset:0;background:rgba(15, 23, 42, 0.8);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;z-index:9999}
-    .gate-card{width:min(420px,92%);background:var(--panel);border-radius:20px;padding:24px;box-shadow:0 20px 40px rgba(0,0,0,0.2);backdrop-filter:blur(10px);background:rgba(255,255,255,0.95);border:1px solid rgba(255,255,255,0.2)}
-    .gate-title{margin:0 0 8px;font-size:24px;text-align:center;font-weight:700}
-    .gate-sub{margin:0 0 20px;color:var(--muted);font-size:14px;text-align:center}
-    .fade{animation:fadeout 0.6s ease forwards}
-    @keyframes fadeout{to{opacity:0;transform:scale(0.98)}}
-    .gate-row{display:grid;grid-template-columns:1fr auto;gap:12px}
-    .gate-row input{font-size:18px;letter-spacing:2px}
-    .gate-err{color:var(--error);font-size:13px;height:16px;margin-top:8px;text-align:center}
-    .shake{animation:shake 0.2s linear 2}
-    @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+    .card:hover {
+      border-color: rgba(212, 168, 83, 0.2);
+    }
 
-    /* 3D Motion accents */
-    .lift{transform-style:preserve-3d;will-change:transform,box-shadow;animation:floaty 8s ease-in-out infinite}
-    @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-    .month-anim{animation:monthFlip 0.5s cubic-bezier(0.2,0.8,0.2,1)}
-    @keyframes monthFlip{0%{transform:rotateX(-12deg) translateY(-6px);opacity:0}100%{transform:none;opacity:1}}
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--line);
+    }
 
-    /* Copper Conversion scoped */
-    .cu .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:10px}
-    .cu .col-12{grid-column:span 12}
-    .cu .col-6{grid-column:span 6}
-    @media (max-width:760px){.cu .grid{grid-template-columns:repeat(6,1fr)}.cu .col-6{grid-column:span 6}}
-    .cu label{display:block;font-size:13px;color:var(--muted);margin:0 0 6px 2px;font-weight:500}
-    .cu select,.cu input{width:100%;padding:10px 14px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);transition:var(--transition)}
-    .cu select:focus,.cu input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(59, 130, 246, 0.1)}
-    .cu .seg{display:flex;border:1px solid var(--line);padding:4px;border-radius:10px;background:var(--panel)}
-    .cu .seg button{flex:1;border:0;background:transparent;color:var(--muted);padding:8px 10px;border-radius:6px;font-weight:500;transition:var(--transition)}
-    .cu .seg button:hover{color:var(--ink)}
-    .cu .seg button.active{background:var(--gradient);color:#fff}
-    
-    /* Loading animation */
-    .loader{display:inline-block;width:20px;height:20px;border:3px solid var(--line);border-radius:50%;border-top-color:var(--primary);animation:spin 1s ease-in-out infinite}
-    @keyframes spin{to{transform:rotate(360deg)}}
-    
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-title i {
+      color: var(--accent);
+    }
+
+    /* Form elements */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    input[type="number"],
+    input[type="text"],
+    select {
+      width: 100%;
+      padding: 12px 14px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      color: var(--ink);
+      font-family: inherit;
+      font-size: 14px;
+      transition: var(--transition);
+    }
+
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    input::placeholder {
+      color: var(--muted);
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 20px;
+      background: var(--gradient);
+      color: var(--bg);
+      border: none;
+      border-radius: var(--radius-md);
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px var(--accent-glow);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn-secondary {
+      background: var(--bg-elevated);
+      color: var(--ink);
+      border: 1px solid var(--line);
+    }
+
+    .btn-secondary:hover {
+      background: var(--panel-hover);
+      border-color: var(--accent);
+      box-shadow: none;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--ink-secondary);
+      border: 1px solid transparent;
+    }
+
+    .btn-ghost:hover {
+      background: var(--panel);
+      color: var(--ink);
+      box-shadow: none;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    /* Segment toggle */
+    .seg {
+      display: flex;
+      background: var(--bg-elevated);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      padding: 4px;
+      margin-bottom: 20px;
+    }
+
+    .seg button {
+      flex: 1;
+      padding: 10px 16px;
+      background: transparent;
+      border: none;
+      border-radius: var(--radius-sm);
+      color: var(--ink-secondary);
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .seg button:hover {
+      color: var(--ink);
+    }
+
+    .seg button.active {
+      background: var(--gradient);
+      color: var(--bg);
+    }
+
+    /* Results */
+    .result {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px dashed var(--line);
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+    }
+
+    .stat-box {
+      background: var(--bg-elevated);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+    }
+
+    .stat-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    /* Table */
+    .tbl {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+    }
+
+    .tbl th,
+    .tbl td {
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .tbl th {
+      font-weight: 600;
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      background: var(--bg-elevated);
+    }
+
+    .tbl td {
+      color: var(--ink-secondary);
+    }
+
+    .tbl tr:hover td {
+      background: var(--bg-elevated);
+    }
+
+    .tbl tr.highlight td {
+      background: rgba(212, 168, 83, 0.1);
+      color: var(--ink);
+    }
+
+    /* Note */
+    .note {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 16px;
+      padding: 12px 14px;
+      background: var(--bg-elevated);
+      border-radius: var(--radius-sm);
+      border-left: 3px solid var(--accent);
+    }
+
+    /* Calendar */
+    .cal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .cal-nav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .cal-month-year {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .cal-label {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--ink);
+      min-width: 120px;
+    }
+
+    .cal-selectors {
+      display: flex;
+      gap: 8px;
+    }
+
+    .cal-selectors select,
+    .cal-selectors input {
+      padding: 8px 12px;
+      font-size: 13px;
+    }
+
+    .btn-icon {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-elevated);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      color: var(--ink-secondary);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .btn-icon:hover {
+      background: var(--panel);
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+    }
+
+    .cal-cell {
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      background: var(--bg-elevated);
+      color: var(--ink-secondary);
+    }
+
+    .cal-cell:hover {
+      background: var(--panel-hover);
+      color: var(--ink);
+    }
+
+    .cal-cell.dow {
+      background: transparent;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      cursor: default;
+    }
+
+    .cal-cell.muted {
+      opacity: 0.3;
+    }
+
+    .cal-cell.today {
+      background: var(--accent);
+      color: var(--bg);
+      font-weight: 700;
+    }
+
+    /* Game */
+    .game-question {
+      font-size: 32px;
+      font-weight: 700;
+      text-align: center;
+      padding: 24px;
+      background: var(--bg-elevated);
+      border-radius: var(--radius-md);
+      margin-bottom: 20px;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--accent);
+    }
+
+    .game-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .game-stat {
+      padding: 10px 16px;
+      background: var(--bg-elevated);
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+    }
+
+    .game-stat b {
+      color: var(--accent);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .game-hint {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 12px;
+    }
+
+    .game-hint.ok {
+      color: var(--success);
+    }
+
+    .game-hint.err {
+      color: var(--error);
+    }
+
+    /* PIN Gate */
+    #gate {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 10, 15, 0.95);
+      backdrop-filter: blur(16px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+
+    .gate-card {
+      width: min(400px, 90%);
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      text-align: center;
+    }
+
+    .gate-logo {
+      width: 60px;
+      height: 60px;
+      background: var(--gradient);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 22px;
+      color: var(--bg);
+      margin: 0 auto 20px;
+      box-shadow: 0 8px 24px var(--accent-glow);
+    }
+
+    .gate-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .gate-sub {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+
+    .gate-form {
+      display: flex;
+      gap: 12px;
+    }
+
+    .gate-form input {
+      flex: 1;
+      text-align: center;
+      font-size: 20px;
+      letter-spacing: 4px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .gate-err {
+      color: var(--error);
+      font-size: 13px;
+      margin-top: 12px;
+      min-height: 18px;
+    }
+
     /* Notification */
-    .notification{position:fixed;bottom:20px;right:20px;background:var(--panel);padding:14px 18px;border-radius:12px;box-shadow:var(--card-shadow);display:flex;align-items:center;gap:10px;z-index:1000;transform:translateY(100px);opacity:0;transition:var(--transition)}
-    .notification.show{transform:translateY(0);opacity:1}
-    .notification.success{border-left:4px solid var(--success)}
-    .notification.error{border-left:4px solid var(--error)}
-    .notification.info{border-left:4px solid var(--primary)}
-    
-    /* Tooltip */
-    .tooltip{position:relative}
-    .tooltip:hover::after{content:attr(data-tooltip);position:absolute;bottom:100%;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--panel);padding:6px 10px;border-radius:6px;font-size:12px;white-space:nowrap;z-index:1000;pointer-events:none}
-    .tooltip:hover::before{content:'';position:absolute;bottom:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--ink);z-index:1000}
+    .notification {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 1000;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: var(--transition);
+      box-shadow: var(--card-shadow);
+    }
+
+    .notification.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .notification.success {
+      border-left: 3px solid var(--success);
+    }
+
+    .notification.success i {
+      color: var(--success);
+    }
+
+    .notification.error {
+      border-left: 3px solid var(--error);
+    }
+
+    .notification.error i {
+      color: var(--error);
+    }
+
+    .notification.info {
+      border-left: 3px solid var(--info);
+    }
+
+    .notification.info i {
+      color: var(--info);
+    }
+
+    /* Mobile */
+    .mobile-header {
+      display: none;
+    }
+
+    @media (max-width: 900px) {
+      .sidebar {
+        transform: translateX(-100%);
+        width: min(280px, 85vw);
+        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.5);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .content {
+        margin-left: 0;
+      }
+
+      .main-header {
+        display: none;
+      }
+
+      .mobile-header {
+        display: flex;
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        background: rgba(10, 10, 15, 0.95);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--line);
+        padding: 16px 20px;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .mobile-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .mobile-brand-logo {
+        width: 36px;
+        height: 36px;
+        background: var(--gradient);
+        border-radius: var(--radius-sm);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 14px;
+        color: var(--bg);
+      }
+
+      .mobile-brand-name {
+        font-weight: 700;
+        font-size: 16px;
+      }
+
+      .menu-toggle {
+        width: 40px;
+        height: 40px;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-sm);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: var(--ink);
+        font-size: 18px;
+      }
+
+      .main-area {
+        padding: 20px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .card {
+        padding: 20px;
+      }
+
+      .btn-group {
+        flex-direction: column;
+      }
+
+      .btn-group .btn {
+        width: 100%;
+      }
+
+      .notification {
+        left: 16px;
+        right: 16px;
+        bottom: 16px;
+      }
+    }
+
+    /* Animations */
+    .fade-in {
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .slide-up {
+      animation: slideUp 0.4s ease;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-8px); }
+      75% { transform: translateX(8px); }
+    }
+
+    .shake {
+      animation: shake 0.3s ease;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--line);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--muted);
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
   </style>
 </head>
 <body>
-  <!-- PIN Gate Overlay -->
+  <!-- PIN Gate -->
   <div id="gate" role="dialog" aria-modal="true">
-    <div class="gate-card">
-      <h2 class="gate-title">Enter PIN</h2>
-      <p class="gate-sub">Protected by RR Operations Team</p>
-      <div class="gate-row">
-        <input id="pin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="••••" aria-label="PIN" />
+    <div class="gate-card slide-up">
+      <div class="gate-logo">RR</div>
+      <h2 class="gate-title">Welcome Back</h2>
+      <p class="gate-sub">Enter PIN to access RR Operations Team</p>
+      <div class="gate-form">
+        <input id="pin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="PIN" aria-label="PIN" autofocus />
         <button class="btn" id="unlockBtn">Unlock</button>
       </div>
       <div class="gate-err" id="gateErr"></div>
     </div>
   </div>
 
-  <div class="layout" id="mainLayout">
-    <div class="topbar">
-      <button class="menu-btn" id="menuBtn" aria-label="Menu"><i class="fas fa-bars"></i></button>
-      <h1 class="title3d">RR Cable Shop</h1>
-      <div class="powered">Powered by <b>RR Operations Team</b></div>
-    </div>
-
+  <div class="layout">
+    <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-header">
         <div class="brand">
-          <span class="badge">RR</span>
-          <span>Cable Shop</span>
+          <div class="brand-logo">RR</div>
+          <div class="brand-text">
+            <span class="brand-name">Operations Team</span>
+            <span class="brand-tagline">Cable Solutions</span>
+          </div>
         </div>
-        <button class="sidebar-toggle tooltip" id="sidebarToggle" data-tooltip="Toggle Sidebar" aria-label="Toggle Sidebar">
-          <i class="fas fa-bars"></i>
-        </button>
       </div>
       <nav class="nav">
+        <div class="nav-section">Main</div>
         <button class="active" data-target="home">
           <i class="fas fa-home"></i>
-          <span>Home</span>
+          <span>Dashboard</span>
         </button>
+        
+        <div class="nav-section">Calculators</div>
         <button data-target="selector">
           <i class="fas fa-calculator"></i>
           <span>Reel Selector</span>
@@ -249,168 +1037,207 @@
           <span>Reel Dimension</span>
         </button>
         <button data-target="standard">
-          <i class="fas fa-list"></i>
-          <span>Standard Wood Reel</span>
+          <i class="fas fa-list-alt"></i>
+          <span>Standard Reels</span>
         </button>
         <button data-target="copper">
           <i class="fas fa-exchange-alt"></i>
           <span>Copper Conversion</span>
         </button>
-        <!-- NEW: PVC page button -->
         <button data-target="pvc">
           <i class="fas fa-weight-hanging"></i>
-          <span>Cable PVC Weight</span>
+          <span>PVC Weight</span>
         </button>
       </nav>
     </aside>
 
+    <!-- Main Content -->
     <main class="content">
-      <div class="app">
-        <!-- Main Header - Visible on Desktop -->
-        <div class="hdr">
-          <h1 class="title3d">RR Cable Shop</h1>
-          <div class="powered">Powered by <b>RR Operations Team</b></div>
+      <!-- Mobile Header -->
+      <div class="mobile-header">
+        <div class="mobile-brand">
+          <div class="mobile-brand-logo">RR</div>
+          <span class="mobile-brand-name">Operations Team</span>
         </div>
+        <button class="menu-toggle" id="menuToggle" aria-label="Menu">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
 
-        <!-- Home (Calendar + Brain Game) -->
+      <!-- Desktop Header -->
+      <header class="main-header">
+        <div class="header-content">
+          <div class="page-title">
+            <i class="fas fa-home" id="pageIcon"></i>
+            <h1 id="pageTitle">Dashboard</h1>
+          </div>
+          <div class="header-actions">
+            <div class="header-time" id="headerTime"></div>
+          </div>
+        </div>
+      </header>
+
+      <div class="main-area">
+        <!-- Home Page -->
         <section id="home" class="page active">
-          <div class="cal card lift" id="calCard">
-            <div class="cal-head">
-              <button class="btn-icon" id="calPrev" aria-label="Previous Month"><i class="fas fa-chevron-left"></i></button>
-              <div class="cal-title">
-                <div id="calLabel">—</div>
-                <div class="cal-when">
-                  <select id="calMonth" aria-label="Month"></select>
-                  <input id="calYear" type="number" min="1900" max="2100" aria-label="Year"/>
-                </div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Calendar</span>
               </div>
-              <button class="btn-icon" id="calNext" aria-label="Next Month"><i class="fas fa-chevron-right"></i></button>
-              <button class="btn btn-ghost" id="calToday" aria-label="Jump to Today">Today</button>
+            </div>
+            <div class="cal-header">
+              <div class="cal-nav">
+                <button class="btn-icon" id="calPrev" aria-label="Previous">
+                  <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="cal-month-year">
+                  <span class="cal-label" id="calLabel">January 2025</span>
+                </div>
+                <button class="btn-icon" id="calNext" aria-label="Next">
+                  <i class="fas fa-chevron-right"></i>
+                </button>
+              </div>
+              <div class="cal-selectors">
+                <select id="calMonth" aria-label="Month"></select>
+                <input id="calYear" type="number" min="1900" max="2100" aria-label="Year" style="width: 90px;" />
+              </div>
+              <button class="btn btn-secondary" id="calToday">Today</button>
             </div>
             <div class="cal-grid" id="calGrid"></div>
           </div>
 
-          <div class="game lift" id="gameCard">
-            <h3>Brain Game — Quick Math</h3>
-            <div class="game-row">
-              <div class="q" id="qText">Press Start</div>
-              <div class="row">
-                <input id="ans" type="number" inputmode="numeric" placeholder="Your answer" disabled />
-                <button class="btn" id="submitAns" disabled>Submit</button>
-                <button class="btn-ghost" id="nextQ" disabled>Next</button>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <i class="fas fa-brain"></i>
+                <span>Brain Game - Quick Math</span>
               </div>
-              <div class="row" style="grid-template-columns:1fr auto auto;">
-                <div class="pill">Time: <b id="gTime">—</b></div>
-                <button class="btn" id="start60">Start 60s</button>
-                <button class="btn-ghost" id="stopGame" disabled>Stop</button>
-              </div>
-              <div class="stat">
-                <div class="pill">Score: <b id="gScore">0</b></div>
-                <div class="pill">Correct: <b id="gRight">0</b></div>
-                <div class="pill">Wrong: <b id="gWrong">0</b></div>
-                <div class="pill">Streak: <b id="gStreak">0</b></div>
-                <div class="pill">Accuracy: <b id="gAcc">0%</b></div>
-              </div>
-              <div class="hint" id="gHint">Normal level: +, −, × with 1–2 digit numbers. Tip: use Enter to submit.</div>
-              <div class="hint" id="gMsg"></div>
             </div>
+            <div class="game-question" id="qText">Press Start</div>
+            <div class="form-grid" style="grid-template-columns: 1fr auto;">
+              <input id="ans" type="number" inputmode="numeric" placeholder="Your answer" disabled />
+              <button class="btn" id="submitAns" disabled style="min-width: 100px;">Submit</button>
+            </div>
+            <div class="btn-group">
+              <button class="btn" id="start60">Start 60s</button>
+              <button class="btn btn-secondary" id="nextQ" disabled>Next</button>
+              <button class="btn btn-ghost" id="stopGame" disabled>Stop</button>
+            </div>
+            <div class="game-stats">
+              <div class="game-stat">Time: <b id="gTime">-</b></div>
+              <div class="game-stat">Score: <b id="gScore">0</b></div>
+              <div class="game-stat">Correct: <b id="gRight">0</b></div>
+              <div class="game-stat">Wrong: <b id="gWrong">0</b></div>
+              <div class="game-stat">Streak: <b id="gStreak">0</b></div>
+              <div class="game-stat">Accuracy: <b id="gAcc">0%</b></div>
+            </div>
+            <div class="game-hint" id="gHint">Normal level: +, -, x with 1-2 digit numbers. Press Enter to submit.</div>
+            <div class="game-hint" id="gMsg"></div>
           </div>
         </section>
 
-        <!-- 01. Reel Selector -->
+        <!-- Reel Selector -->
         <section id="selector" class="page">
-          <div class="page-title">
-            <i class="fas fa-calculator"></i>
-            <span>Reel Selector</span>
-          </div>
           <div class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <i class="fas fa-calculator"></i>
+                <span>Reel Selector</span>
+              </div>
+            </div>
             <div class="seg">
-              <button id="mode-regular" class="active" onclick="setMode('regular')">Regular</button>
-              <button id="mode-custom" onclick="setMode('custom')">Customized</button>
+              <button id="mode-regular" class="active">Regular</button>
+              <button id="mode-custom">Customized</button>
             </div>
 
-            <!-- Regular -->
-            <div id="panel-regular" class="card">
-              <div class="grid">
-                <div>
-                  <label>Cable OD (mm)</label>
+            <div id="panel-regular">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label">Cable OD (mm)</label>
                   <input id="r-cable-od" type="number" min="1" step="0.1" placeholder="e.g., 31">
                 </div>
-                <div>
-                  <label>Length (m)</label>
+                <div class="form-group">
+                  <label class="form-label">Length (m)</label>
                   <input id="r-length" type="number" min="1" step="1" placeholder="e.g., 1050">
                 </div>
               </div>
-              <div class="row">
+              <div class="btn-group">
                 <button class="btn" onclick="computeRegular()">Calculate</button>
-                <button class="btn-ghost" onclick="resetRegular()">Reset</button>
-                <button class="btn-ghost" onclick="copyRegular()" id="r-copy">Copy</button>
+                <button class="btn btn-secondary" onclick="resetRegular()">Reset</button>
+                <button class="btn btn-ghost" onclick="copyRegular()">Copy</button>
               </div>
               <div id="r-out" class="result"></div>
             </div>
 
-            <!-- Customized -->
-            <div id="panel-custom" class="card" style="display:none">
-              <div class="grid">
-                <div>
-                  <label>Cable OD (mm)</label>
+            <div id="panel-custom" style="display: none;">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label">Cable OD (mm)</label>
                   <input id="c-cable-od" type="number" min="1" step="0.1" placeholder="e.g., 31">
                 </div>
-                <div>
-                  <label>Reel OD (mm)</label>
+                <div class="form-group">
+                  <label class="form-label">Reel OD (mm)</label>
                   <input id="c-rod" type="number" min="100" step="1" placeholder="e.g., 1600">
                 </div>
-                <div>
-                  <label>Barrel ID (mm)</label>
+                <div class="form-group">
+                  <label class="form-label">Barrel ID (mm)</label>
                   <input id="c-rid" type="number" min="50" step="1" placeholder="e.g., 800">
                 </div>
-                <div>
-                  <label>Traverse (mm)</label>
+                <div class="form-group">
+                  <label class="form-label">Traverse (mm)</label>
                   <input id="c-trv" type="number" min="50" step="1" placeholder="e.g., 800">
                 </div>
               </div>
-              <div class="row">
+              <div class="btn-group">
                 <button class="btn" onclick="computeCustom()">Calculate</button>
-                <button class="btn-ghost" onclick="resetCustom()">Reset</button>
-                <button class="btn-ghost" onclick="copyCustom()" id="c-copy">Copy</button>
+                <button class="btn btn-secondary" onclick="resetCustom()">Reset</button>
+                <button class="btn btn-ghost" onclick="copyCustom()">Copy</button>
               </div>
               <div id="c-out" class="result"></div>
             </div>
           </div>
         </section>
 
-        <!-- 02. Reel Dimension -->
+        <!-- Reel Dimension -->
         <section id="dimension" class="page">
-          <div class="page-title">
-            <i class="fas fa-ruler-combined"></i>
-            <span>Reel Dimension</span>
-          </div>
           <div class="card">
-            <div class="svg-wrap">
+            <div class="card-header">
+              <div class="card-title">
+                <i class="fas fa-ruler-combined"></i>
+                <span>Reel Dimension Reference</span>
+              </div>
+            </div>
+            <div style="overflow-x: auto;">
               <svg viewBox="0 0 900 320" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" aria-label="Wooden reel dimension diagram">
-                <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L8,4 L0,8 Z" fill="#111"/></marker></defs>
-                <g font-family="Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="14" fill="#111" stroke="#111" stroke-width="2">
+                <defs>
+                  <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto" markerUnits="strokeWidth">
+                    <path d="M0,0 L8,4 L0,8 Z" fill="#d4a853"/>
+                  </marker>
+                </defs>
+                <g font-family="Space Grotesk, system-ui, sans-serif" font-size="14" fill="#f4f4f6" stroke="#d4a853" stroke-width="2">
                   <g transform="translate(150,160)">
-                    <circle cx="0" cy="0" r="110" fill="none" stroke="#111"/>
-                    <circle cx="0" cy="0" r="55" fill="none" stroke="#111"/>
+                    <circle cx="0" cy="0" r="110" fill="none" stroke="#2a2a38" stroke-width="3"/>
+                    <circle cx="0" cy="0" r="55" fill="none" stroke="#2a2a38" stroke-width="3"/>
                     <line x1="-140" y1="-110" x2="-140" y2="110" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
-                    <text x="-180" y="0" transform="rotate(-90 -180,0)" text-anchor="middle">OD — Flange Diameter</text>
+                    <text x="-180" y="0" transform="rotate(-90 -180,0)" text-anchor="middle" fill="#a0a0b0" stroke="none">OD - Flange Diameter</text>
                     <line x1="140" y1="-55" x2="140" y2="55" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
-                    <text x="170" y="0" transform="rotate(-90 170,0)" text-anchor="middle">Barrel ID — Core/Drum</text>
-                    <text x="0" y="140" text-anchor="middle" font-weight="700">Front View</text>
+                    <text x="170" y="0" transform="rotate(-90 170,0)" text-anchor="middle" fill="#a0a0b0" stroke="none">Barrel ID - Core</text>
+                    <text x="0" y="140" text-anchor="middle" font-weight="700" fill="#d4a853" stroke="none">Front View</text>
                   </g>
                   <g transform="translate(540,60)">
-                    <rect x="0" y="0" width="22" height="200" fill="#fff"/>
-                    <rect x="22" y="40" width="156" height="120" fill="#fff"/>
-                    <rect x="178" y="0" width="22" height="200" fill="#fff"/>
+                    <rect x="0" y="0" width="22" height="200" fill="#1a1a24" stroke="#2a2a38" stroke-width="2"/>
+                    <rect x="22" y="40" width="156" height="120" fill="#1a1a24" stroke="#2a2a38" stroke-width="2"/>
+                    <rect x="178" y="0" width="22" height="200" fill="#1a1a24" stroke="#2a2a38" stroke-width="2"/>
                     <line x1="22" y1="230" x2="178" y2="230" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
-                    <text x="100" y="252" text-anchor="middle">Traverse — Between Flanges</text>
-                    <text x="100" y="-12" text-anchor="middle" font-weight="700">Side View</text>
+                    <text x="100" y="252" text-anchor="middle" fill="#a0a0b0" stroke="none">Traverse - Between Flanges</text>
+                    <text x="100" y="-12" text-anchor="middle" font-weight="700" fill="#d4a853" stroke="none">Side View</text>
                   </g>
-                  <g transform="translate(30,300)" font-size="12">
-                    <text>• <tspan font-weight="700">OD</tspan> = Flange outer diameter (mm)</text>
-                    <text x="250">• <tspan font-weight="700">Barrel ID</tspan> = Core/Drum diameter (mm)</text>
-                    <text x="530">• <tspan font-weight="700">Traverse</tspan> = Distance between flanges (mm)</text>
+                  <g transform="translate(30,300)" font-size="12" fill="#a0a0b0" stroke="none">
+                    <text>OD = Flange outer diameter (mm)</text>
+                    <text x="280">Barrel ID = Core/Drum diameter (mm)</text>
+                    <text x="540">Traverse = Distance between flanges (mm)</text>
                   </g>
                 </g>
               </svg>
@@ -418,201 +1245,193 @@
           </div>
         </section>
 
-        <!-- 03. Standard Wood Reel -->
+        <!-- Standard Reels -->
         <section id="standard" class="page">
-          <div class="page-title">
-            <i class="fas fa-list"></i>
-            <span>Standard Wood Reel</span>
-          </div>
           <div class="card">
-            <div class="grid">
-              <div>
-                <label>Cable OD (mm)</label>
+            <div class="card-header">
+              <div class="card-title">
+                <i class="fas fa-list-alt"></i>
+                <span>Standard Wood Reel</span>
+              </div>
+            </div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">Cable OD (mm)</label>
                 <input id="t-od" type="number" min="1" step="0.1" placeholder="e.g., 31" value="31">
               </div>
-              <div>
-                <label>Length (m) <span style="color:var(--muted)">(optional)</span></label>
+              <div class="form-group">
+                <label class="form-label">Length (m) - optional</label>
                 <input id="t-len" type="number" min="1" step="1" placeholder="e.g., 1050">
               </div>
             </div>
-            <div class="row">
-              <button class="btn" onclick="buildReelTable()">Update</button>
+            <div class="btn-group">
+              <button class="btn" onclick="buildReelTable()">Update Table</button>
             </div>
-            <table class="tbl mono" id="reel-table"></table>
-            <div class="note">Capacities use your factory calibration (PF = 0.7855) at 90% fill. Geometric @90% is higher and shown only in the selector for reference.</div>
+            <table class="tbl" id="reel-table"></table>
+            <div class="note">Capacities use factory calibration (PF = 0.7855) at 90% fill.</div>
           </div>
         </section>
 
-        <!-- 04. Copper Rod Conversion -->
+        <!-- Copper Conversion -->
         <section id="copper" class="page">
-          <div class="page-title">
-            <i class="fas fa-exchange-alt"></i>
-            <span>Copper Conversion</span>
-          </div>
-          <div class="cu">
-            <section class="card panel" aria-label="Inputs">
-              <div class="grid">
-                <div class="col-12">
-                  <label for="cu-type">Select Type</label>
-                  <div class="seg" role="tablist" aria-label="Product Type">
-                    <button id="cu-tStrip" class="active" role="tab" aria-selected="true">Strip</button>
-                    <button id="cu-tRod" role="tab" aria-selected="false">Bare Rod / Wire</button>
-                    <button id="cu-tRM" role="tab" aria-selected="false">Bare Cable (RM)</button>
-                  </div>
-                </div>
-                <div class="col-12">
-                  <label for="cu-mode">Select Conversion</label>
-                  <select id="cu-mode" aria-label="Conversion Mode">
-                    <option>Kg to Meter</option>
-                    <option>Kg to Ft</option>
-                    <option>Meter to Kg</option>
-                    <option>Ft to Kg</option>
-                  </select>
-                </div>
-                <div class="col-6 only-strip">
-                  <label for="cu-width">Given Width (mm)</label>
-                  <input id="cu-width" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g., 10" />
-                </div>
-                <div class="col-6 only-strip">
-                  <label for="cu-thickness">Given Thickness (mm)</label>
-                  <input id="cu-thickness" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g., 3" />
-                </div>
-                <div class="col-6 only-rod" style="display:none">
-                  <label for="cu-diameter">Given Diameter (mm)</label>
-                  <input id="cu-diameter" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g., 12" />
-                </div>
-                <div class="col-6 only-rm" style="display:none">
-                  <label for="cu-areaRM">Cable (RM) Size (mm²)</label>
-                  <input id="cu-areaRM" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g., 1.3" />
-                </div>
-                <div class="col-12">
-                  <label id="cu-given-label" for="cu-given">Given Kg</label>
-                  <input id="cu-given" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g., 500" />
-                </div>
-                <div class="col-12" style="display:flex;gap:10px;flex-wrap:wrap">
-                  <button id="cu-reset" class="btn-ghost btn" type="button">Reset</button>
-                  <button id="cu-copy" class="btn" type="button" title="Copy result">Copy Result</button>
-                  <button id="cu-quickSwap" class="btn-ghost btn" type="button" title="Swap Kg⇄Length where applicable">Swap</button>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <i class="fas fa-exchange-alt"></i>
+                <span>Copper Conversion</span>
+              </div>
+            </div>
+            <div class="form-grid">
+              <div class="form-group" style="grid-column: 1 / -1;">
+                <label class="form-label">Select Type</label>
+                <div class="seg" style="margin-bottom: 0;">
+                  <button id="cu-tStrip" class="active">Strip</button>
+                  <button id="cu-tRod">Bare Rod / Wire</button>
+                  <button id="cu-tRM">Bare Cable (RM)</button>
                 </div>
               </div>
-            </section>
-
-            <section class="card panel" style="margin-top:14px" aria-label="Details">
-              <div class="grid">
-                <div class="col-6">
-                  <div class="pill">Area: <b id="cu-area">—</b> mm²</div>
+              <div class="form-group" style="grid-column: 1 / -1;">
+                <label class="form-label">Conversion Mode</label>
+                <select id="cu-mode">
+                  <option>Kg to Meter</option>
+                  <option>Kg to Ft</option>
+                  <option>Meter to Kg</option>
+                  <option>Ft to Kg</option>
+                </select>
+              </div>
+              <div class="form-group only-strip">
+                <label class="form-label">Width (mm)</label>
+                <input id="cu-width" type="number" step="any" placeholder="e.g., 10">
+              </div>
+              <div class="form-group only-strip">
+                <label class="form-label">Thickness (mm)</label>
+                <input id="cu-thickness" type="number" step="any" placeholder="e.g., 3">
+              </div>
+              <div class="form-group only-rod" style="display: none;">
+                <label class="form-label">Diameter (mm)</label>
+                <input id="cu-diameter" type="number" step="any" placeholder="e.g., 12">
+              </div>
+              <div class="form-group only-rm" style="display: none;">
+                <label class="form-label">Cable Size (mm2)</label>
+                <input id="cu-areaRM" type="number" step="any" placeholder="e.g., 1.3">
+              </div>
+              <div class="form-group" style="grid-column: 1 / -1;">
+                <label class="form-label" id="cu-given-label">Given Kg</label>
+                <input id="cu-given" type="number" step="any" placeholder="e.g., 500">
+              </div>
+            </div>
+            <div class="btn-group">
+              <button class="btn btn-secondary" id="cu-reset">Reset</button>
+              <button class="btn" id="cu-copy">Copy Result</button>
+              <button class="btn btn-ghost" id="cu-quickSwap">Swap</button>
+            </div>
+            <div class="result">
+              <div class="result-grid">
+                <div class="stat-box">
+                  <div class="stat-label">Area</div>
+                  <div class="stat-value" id="cu-area">-</div>
                 </div>
-                <div class="col-6">
-                  <div class="pill">Mass per meter: <b id="cu-kgpm">—</b> kg/m</div>
+                <div class="stat-box">
+                  <div class="stat-label">Mass per meter</div>
+                  <div class="stat-value" id="cu-kgpm">-</div>
                 </div>
               </div>
-              <div class="mono" id="cu-result-head" style="font-weight:800;margin-top:10px">Result: —</div>
-              <div class="note" id="cu-result-sub">Enter dimensions & a value to calculate.</div>
-            </section>
+              <div style="margin-top: 16px; font-weight: 600;" id="cu-result-head">Result: -</div>
+              <div class="note" id="cu-result-sub">Enter dimensions and a value to calculate.</div>
+            </div>
           </div>
         </section>
 
-        <!-- 05. Cable PVC Weight -->
+        <!-- PVC Weight -->
         <section id="pvc" class="page">
-          <div class="page-title">
-            <i class="fas fa-weight-hanging"></i>
-            <span>Cable PVC Weight</span>
-          </div>
-
           <div class="card">
-            <div class="seg" style="margin-bottom:14px">
+            <div class="card-header">
+              <div class="card-title">
+                <i class="fas fa-weight-hanging"></i>
+                <span>Cable PVC Weight</span>
+              </div>
+            </div>
+            <div class="seg">
               <button id="pv-mode-sc" class="active">Single-core</button>
               <button id="pv-mode-mc">Multicore</button>
             </div>
-
-            <!-- Density & Length (shared) -->
-            <div class="grid">
-              <div>
-                <label>Density (g/cm³)</label>
-                <input id="pv-rho" type="number" step="0.01" min="0" value="1.55">
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">Density (g/cm3)</label>
+                <input id="pv-rho" type="number" step="0.01" value="1.55">
               </div>
-              <div>
-                <label>Length (m)</label>
-                <input id="pv-L" type="number" step="1" min="0" value="1000">
+              <div class="form-group">
+                <label class="form-label">Length (m)</label>
+                <input id="pv-L" type="number" step="1" value="1000">
               </div>
             </div>
           </div>
 
-          <!-- Single-core -->
           <div id="pv-sc" class="card">
-            <div class="grid">
-              <div>
-                <label>Bare Cu OD (mm)</label>
-                <input id="pv-sc-cu" type="number" step="0.01" min="0" placeholder="e.g., 16.5">
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">Bare Cu OD (mm)</label>
+                <input id="pv-sc-cu" type="number" step="0.01" placeholder="e.g., 16.5">
               </div>
-              <div>
-                <label>Insulation thickness (mm)</label>
-                <input id="pv-sc-ins" type="number" step="0.01" min="0" placeholder="e.g., 2.0">
+              <div class="form-group">
+                <label class="form-label">Insulation thickness (mm)</label>
+                <input id="pv-sc-ins" type="number" step="0.01" placeholder="e.g., 2.0">
               </div>
-              <div>
-                <label>Sheath thickness (mm)</label>
-                <input id="pv-sc-sh" type="number" step="0.01" min="0" placeholder="e.g., 2.0">
+              <div class="form-group">
+                <label class="form-label">Sheath thickness (mm)</label>
+                <input id="pv-sc-sh" type="number" step="0.01" placeholder="e.g., 2.0">
               </div>
             </div>
-
-            <div class="row">
+            <div class="btn-group">
               <button class="btn" id="pv-sc-calc">Calculate</button>
-              <button class="btn-ghost" id="pv-sc-reset">Reset</button>
-              <button class="btn-ghost" id="pv-sc-copy">Copy</button>
+              <button class="btn btn-secondary" id="pv-sc-reset">Reset</button>
+              <button class="btn btn-ghost" id="pv-sc-copy">Copy</button>
             </div>
-
-            <div class="result mono" id="pv-sc-out"></div>
-            <div class="note">PVC mass includes insulation + outer sheath. Copper density assumed 8.96 g/cm³.</div>
+            <div class="result mono" id="pv-sc-out" style="font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.8;"></div>
+            <div class="note">PVC mass includes insulation + outer sheath. Copper density: 8.96 g/cm3.</div>
           </div>
 
-          <!-- Multicore -->
-          <div id="pv-mc" class="card" style="display:none">
-            <div class="grid">
-              <div>
-                <label>Number of cores</label>
-                <input id="pv-mc-n" type="number" step="1" min="1" value="4">
+          <div id="pv-mc" class="card" style="display: none;">
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">Number of cores</label>
+                <input id="pv-mc-n" type="number" step="1" value="4">
               </div>
-              <div>
-                <label>Bare Cu OD per core (mm)</label>
-                <input id="pv-mc-cu" type="number" step="0.01" min="0" placeholder="e.g., 4.7">
+              <div class="form-group">
+                <label class="form-label">Bare Cu OD per core (mm)</label>
+                <input id="pv-mc-cu" type="number" step="0.01" placeholder="e.g., 4.7">
               </div>
-              <div>
-                <label>Insulation thickness (mm)</label>
-                <input id="pv-mc-ins" type="number" step="0.01" min="0" placeholder="e.g., 1.0">
+              <div class="form-group">
+                <label class="form-label">Insulation thickness (mm)</label>
+                <input id="pv-mc-ins" type="number" step="0.01" placeholder="e.g., 1.0">
               </div>
-              <div>
-                <label>Inner sheath thickness (mm)</label>
-                <input id="pv-mc-inner" type="number" step="0.01" min="0" placeholder="e.g., 1.2">
+              <div class="form-group">
+                <label class="form-label">Inner sheath (mm)</label>
+                <input id="pv-mc-inner" type="number" step="0.01" placeholder="e.g., 1.2">
               </div>
-              <div>
-                <label>Outer sheath thickness (mm)</label>
-                <input id="pv-mc-sh" type="number" step="0.01" min="0" placeholder="e.g., 2.0">
+              <div class="form-group">
+                <label class="form-label">Outer sheath (mm)</label>
+                <input id="pv-mc-sh" type="number" step="0.01" placeholder="e.g., 2.0">
               </div>
-              <div>
-                <label>Inner OD before inner sheath (mm) <span style="color:var(--muted)">(optional)</span></label>
-                <input id="pv-mc-innerOD" type="number" step="0.01" min="0" placeholder="If known">
+              <div class="form-group">
+                <label class="form-label">Inner OD before sheath (mm) - optional</label>
+                <input id="pv-mc-innerOD" type="number" step="0.01" placeholder="If known">
               </div>
             </div>
-
-            <div class="row">
+            <div class="btn-group">
               <button class="btn" id="pv-mc-calc">Calculate</button>
-              <button class="btn-ghost" id="pv-mc-est">Estimate Inner OD</button>
-              <button class="btn-ghost" id="pv-mc-reset">Reset</button>
-              <button class="btn-ghost" id="pv-mc-copy">Copy</button>
+              <button class="btn btn-secondary" id="pv-mc-est">Estimate Inner OD</button>
+              <button class="btn btn-ghost" id="pv-mc-reset">Reset</button>
+              <button class="btn btn-ghost" id="pv-mc-copy">Copy</button>
             </div>
-
-            <div class="result mono" id="pv-mc-out"></div>
-            <div class="note">
-              Total PVC = N×(insulation) + inner sheath + outer sheath.  
-              If “Inner OD” is blank, Estimate supports N = 1..4 using a packing allowance. Copper density assumed 8.96 g/cm³.
-            </div>
+            <div class="result mono" id="pv-mc-out" style="font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.8;"></div>
+            <div class="note">Estimate supports N = 1-4. Total PVC = N x (insulation) + inner + outer sheath.</div>
           </div>
         </section>
-
-      </div> <!-- /.app -->
+      </div>
     </main>
-  </div> <!-- /.layout -->
-  
+  </div>
+
   <!-- Notification -->
   <div id="notification" class="notification">
     <i class="fas fa-check-circle"></i>
@@ -620,205 +1439,316 @@
   </div>
 
   <script>
+    /* ===== Initialize Variables ===== */
+    const sidebar = document.getElementById('sidebar');
+    const menuToggle = document.getElementById('menuToggle');
+    const pageTitle = document.getElementById('pageTitle');
+    const pageIcon = document.getElementById('pageIcon');
+    const headerTime = document.getElementById('headerTime');
+
+    /* ===== Time Display ===== */
+    function updateTime() {
+      const now = new Date();
+      const options = { weekday: 'short', hour: '2-digit', minute: '2-digit' };
+      if (headerTime) {
+        headerTime.textContent = now.toLocaleDateString('en-US', options);
+      }
+    }
+    updateTime();
+    setInterval(updateTime, 60000);
+
     /* ===== Notification System ===== */
-    function showNotification(message, type = 'success') {
+    function showNotification(message, type) {
+      type = type || 'success';
       const notification = document.getElementById('notification');
       const notificationText = document.getElementById('notificationText');
       
-      notification.className = `notification ${type}`;
+      notification.className = 'notification ' + type;
       notificationText.textContent = message;
       
-      // Update icon based on type
       const icon = notification.querySelector('i');
-      icon.className = type === 'success' ? 'fas fa-check-circle' : 
-                      type === 'error' ? 'fas fa-exclamation-circle' : 
-                      'fas fa-info-circle';
+      if (type === 'success') {
+        icon.className = 'fas fa-check-circle';
+      } else if (type === 'error') {
+        icon.className = 'fas fa-exclamation-circle';
+      } else {
+        icon.className = 'fas fa-info-circle';
+      }
       
       notification.classList.add('show');
-      
-      setTimeout(() => {
+      setTimeout(function() {
         notification.classList.remove('show');
       }, 3000);
     }
 
-    /* ===== Sidebar Toggle ===== */
-    const sidebar = document.getElementById('sidebar');
-    const sidebarToggle = document.getElementById('sidebarToggle');
-    const mainLayout = document.getElementById('mainLayout');
-    let isSidebarCollapsed = false;
-
-    function toggleSidebar() {
-      isSidebarCollapsed = !isSidebarCollapsed;
-      sidebar.classList.toggle('collapsed');
-      mainLayout.classList.toggle('sidebar-collapsed');
-      
-      // Update icon
-      const icon = sidebarToggle.querySelector('i');
-      icon.className = isSidebarCollapsed ? 'fas fa-chevron-right' : 'fas fa-bars';
-      
-      // Save preference
-      localStorage.setItem('sidebarCollapsed', isSidebarCollapsed);
-      
-      showNotification(isSidebarCollapsed ? 'Sidebar minimized' : 'Sidebar expanded', 'info');
+    /* ===== Mobile Menu ===== */
+    if (menuToggle) {
+      menuToggle.addEventListener('click', function() {
+        sidebar.classList.toggle('open');
+      });
     }
 
-    sidebarToggle.addEventListener('click', toggleSidebar);
+    document.addEventListener('click', function(e) {
+      if (window.innerWidth <= 900 && 
+          !sidebar.contains(e.target) && 
+          !menuToggle.contains(e.target) && 
+          sidebar.classList.contains('open')) {
+        sidebar.classList.remove('open');
+      }
+    });
 
-    // Load sidebar state from localStorage
-    if (localStorage.getItem('sidebarCollapsed') === 'true') {
-      toggleSidebar();
-    }
-
-    /* ===== PIN logic ===== */
-    const PIN_CODE = "1234"; // ← change this to your PIN
+    /* ===== PIN Logic ===== */
+    const PIN_CODE = "1234";
     const MAX_TRIES = 5;
     let tries = 0;
-    function hideGate(){ const g=document.getElementById('gate'); if(g) g.style.display='none'; }
-    function showGate(){ const g=document.getElementById('gate'); if(g) g.style.display='flex'; }
-    function tryUnlock(){
+
+    function hideGate() {
+      const g = document.getElementById('gate');
+      if (g) g.style.display = 'none';
+    }
+
+    function showGate() {
+      const g = document.getElementById('gate');
+      if (g) g.style.display = 'flex';
+    }
+
+    function tryUnlock() {
       const inp = document.getElementById('pin');
       const err = document.getElementById('gateErr');
       const btn = document.getElementById('unlockBtn');
-      const v = (inp.value||'').trim();
-      if(v === PIN_CODE){
+      const v = (inp.value || '').trim();
+      
+      if (v === PIN_CODE) {
         err.textContent = '';
-        sessionStorage.setItem('reel_unlocked','1');
-        document.querySelector('.gate-card').classList.add('fade');
-        setTimeout(()=>{ hideGate(); showNotification('Welcome to RR Cable Shop!', 'success'); }, 550);
+        sessionStorage.setItem('reel_unlocked', '1');
+        hideGate();
+        showNotification('Welcome to RR Operations Team', 'success');
         return;
       }
+      
       tries++;
-      err.textContent = `Wrong PIN (${tries}/${MAX_TRIES})`;
-      btn.classList.add('shake'); setTimeout(()=>btn.classList.remove('shake'),220);
-      if(tries>=MAX_TRIES){ err.textContent = 'Locked — reload page to try again.'; btn.disabled=true; }
-      inp.value=''; inp.focus();
+      err.textContent = 'Wrong PIN (' + tries + '/' + MAX_TRIES + ')';
+      btn.classList.add('shake');
+      setTimeout(function() { btn.classList.remove('shake'); }, 300);
+      
+      if (tries >= MAX_TRIES) {
+        err.textContent = 'Locked - reload page to try again.';
+        btn.disabled = true;
+      }
+      inp.value = '';
+      inp.focus();
     }
-    document.getElementById('unlockBtn').addEventListener('click', tryUnlock);
-    document.getElementById('pin').addEventListener('keydown', (e)=>{ if(e.key==='Enter') tryUnlock() });
-    if(sessionStorage.getItem('reel_unlocked')==='1') hideGate(); else showGate();
 
-    /* ===== Navigation (sidebar & pages) ===== */
-    (function(){
+    document.getElementById('unlockBtn').addEventListener('click', tryUnlock);
+    document.getElementById('pin').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') tryUnlock();
+    });
+
+    if (sessionStorage.getItem('reel_unlocked') === '1') {
+      hideGate();
+    } else {
+      showGate();
+    }
+
+    /* ===== Navigation ===== */
+    (function() {
       const buttons = document.querySelectorAll('.sidebar .nav button');
-      const pages = ['home','selector','dimension','standard','copper','pvc']; // ← added 'pvc'
-      function showPage(id){
-        pages.forEach(p=>{ const sec=document.getElementById(p); if(sec) sec.classList.toggle('active', p===id); });
-        buttons.forEach(b=> b.classList.toggle('active', b.dataset.target===id));
+      const pageTitles = {
+        home: { title: 'Dashboard', icon: 'fas fa-home' },
+        selector: { title: 'Reel Selector', icon: 'fas fa-calculator' },
+        dimension: { title: 'Reel Dimension', icon: 'fas fa-ruler-combined' },
+        standard: { title: 'Standard Reels', icon: 'fas fa-list-alt' },
+        copper: { title: 'Copper Conversion', icon: 'fas fa-exchange-alt' },
+        pvc: { title: 'PVC Weight', icon: 'fas fa-weight-hanging' }
+      };
+      
+      function showPage(id) {
+        const pages = ['home', 'selector', 'dimension', 'standard', 'copper', 'pvc'];
+        pages.forEach(function(p) {
+          const sec = document.getElementById(p);
+          if (sec) sec.classList.toggle('active', p === id);
+        });
         
-        // Auto-expand sidebar on mobile when navigating
-        if(window.innerWidth <= 900) {
-          sidebar.classList.add('mobile-open');
+        buttons.forEach(function(b) {
+          b.classList.toggle('active', b.dataset.target === id);
+        });
+        
+        if (pageTitles[id]) {
+          pageTitle.textContent = pageTitles[id].title;
+          pageIcon.className = pageTitles[id].icon;
         }
         
-        window.scrollTo({top:0,behavior:'smooth'});
-      }
-      buttons.forEach(btn=> btn.addEventListener('click',()=> showPage(btn.dataset.target)));
-      const menuBtn = document.getElementById('menuBtn');
-      if(menuBtn){ 
-        menuBtn.addEventListener('click', ()=> { 
-          sidebar.classList.toggle('mobile-open');
-        }); 
+        if (window.innerWidth <= 900) {
+          sidebar.classList.remove('open');
+        }
+        
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
       
-      // Close mobile sidebar when clicking outside
-      document.addEventListener('click', (e) => {
-        if(window.innerWidth <= 900 && 
-           !sidebar.contains(e.target) && 
-           !menuBtn.contains(e.target) && 
-           sidebar.classList.contains('mobile-open')) {
-          sidebar.classList.remove('mobile-open');
-        }
+      buttons.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          showPage(btn.dataset.target);
+        });
       });
       
       showPage('home');
     })();
 
-    /* ===== Mini Calendar ===== */
-    (function(){
+    /* ===== Calendar ===== */
+    (function() {
       const label = document.getElementById('calLabel');
-      const grid  = document.getElementById('calGrid');
-      const mSel  = document.getElementById('calMonth');
-      const yInp  = document.getElementById('calYear');
-      const prev  = document.getElementById('calPrev');
-      const next  = document.getElementById('calNext');
+      const grid = document.getElementById('calGrid');
+      const mSel = document.getElementById('calMonth');
+      const yInp = document.getElementById('calYear');
+      const prev = document.getElementById('calPrev');
+      const next = document.getElementById('calNext');
       const todayBtn = document.getElementById('calToday');
-      const card = document.getElementById('calCard');
 
-      const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-      const DAYS   = ['S','M','T','W','T','F','S'];
+      const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      const DAYS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
       let current = new Date();
 
-      function buildSelectors(){
+      function buildSelectors() {
         mSel.innerHTML = '';
-        MONTHS.forEach((m,i)=>{ const opt=document.createElement('option'); opt.value=i; opt.textContent=m; mSel.appendChild(opt); });
+        MONTHS.forEach(function(m, i) {
+          const opt = document.createElement('option');
+          opt.value = i;
+          opt.textContent = m;
+          mSel.appendChild(opt);
+        });
       }
-      function setSelectors(dt){ mSel.value = dt.getMonth(); yInp.value = dt.getFullYear(); }
-      function animateFlip(){ if(!card) return; card.classList.remove('month-anim'); void card.offsetWidth; card.classList.add('month-anim'); setTimeout(()=>card.classList.remove('month-anim'),520); }
 
-      function render(dt){
-        const y = dt.getFullYear(), m = dt.getMonth();
+      function setSelectors(dt) {
+        mSel.value = dt.getMonth();
+        yInp.value = dt.getFullYear();
+      }
+
+      function render(dt) {
+        const y = dt.getFullYear();
+        const m = dt.getMonth();
         label.textContent = MONTHS[m] + ' ' + y;
         grid.innerHTML = '';
-        DAYS.forEach(d=>{ const c=document.createElement('div'); c.textContent=d; c.className='cell dow'; grid.appendChild(c); });
-        const first = new Date(y,m,1); const start = first.getDay();
-        const daysInMonth = new Date(y,m+1,0).getDate();
+        
+        DAYS.forEach(function(d) {
+          const c = document.createElement('div');
+          c.textContent = d;
+          c.className = 'cal-cell dow';
+          grid.appendChild(c);
+        });
+        
+        const first = new Date(y, m, 1);
+        const start = first.getDay();
+        const daysInMonth = new Date(y, m + 1, 0).getDate();
         const today = new Date();
-        for(let i=0;i<start;i++){ const c=document.createElement('div'); c.className='cell muted'; c.textContent=''; grid.appendChild(c); }
-        for(let d=1; d<=daysInMonth; d++){
-          const c=document.createElement('div'); c.className='cell'; c.textContent=d;
-          if(today.getFullYear()===y && today.getMonth()===m && today.getDate()===d){ c.classList.add('today'); }
+        
+        for (let i = 0; i < start; i++) {
+          const c = document.createElement('div');
+          c.className = 'cal-cell muted';
+          grid.appendChild(c);
+        }
+        
+        for (let d = 1; d <= daysInMonth; d++) {
+          const c = document.createElement('div');
+          c.className = 'cal-cell';
+          c.textContent = d;
+          if (today.getFullYear() === y && today.getMonth() === m && today.getDate() === d) {
+            c.classList.add('today');
+          }
           grid.appendChild(c);
         }
       }
-      function update(){ current = new Date(Number(yInp.value), Number(mSel.value), 1); render(current); animateFlip(); }
-      prev.addEventListener('click', ()=>{ current.setMonth(current.getMonth()-1); setSelectors(current); render(current); animateFlip(); });
-      next.addEventListener('click', ()=>{ current.setMonth(current.getMonth()+1); setSelectors(current); render(current); animateFlip(); });
-      mSel.addEventListener('change', update);
-      yInp.addEventListener('change', update);
-      if(todayBtn){ todayBtn.addEventListener('click', ()=>{ current = new Date(); setSelectors(current); render(current); animateFlip(); }); }
 
-      buildSelectors(); setSelectors(current); render(current);
-    })();
-
-    /* ===== Brain Game (Normal level) ===== */
-    (function(){
-      const qText = document.getElementById('qText');
-      const ans   = document.getElementById('ans');
-      const submit= document.getElementById('submitAns');
-      const next  = document.getElementById('nextQ');
-      const start = document.getElementById('start60');
-      const stop  = document.getElementById('stopGame');
-      const tEl   = document.getElementById('gTime');
-      const sEl   = document.getElementById('gScore');
-      const rEl   = document.getElementById('gRight');
-      const wEl   = document.getElementById('gWrong');
-      const stEl  = document.getElementById('gStreak');
-      const aEl   = document.getElementById('gAcc');
-      const msg   = document.getElementById('gMsg');
-
-      let correct=0, wrong=0, score=0, streak=0, total=0;
-      let currentAns = null;
-      let timer = null, timeLeft = 0, running = false;
-
-      function rnd(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
-
-      function genQuestion(){
-        // Normal level: +, −, × using 1–2 digit numbers, avoid negatives
-        const ops = ['+','-','×'];
-        const op = ops[rnd(0,ops.length-1)];
-        let a = rnd(4,99), b = rnd(3,12);
-        if(op==='+'){ b = rnd(4,99); currentAns = a + b; }
-        else if(op==='-'){ if(b>a){ const t=a; a=b; b=t; } currentAns = a - b; }
-        else { // ×
-          a = rnd(4,12); b = rnd(3,12); currentAns = a * b;
-        }
-        qText.textContent = `${a} ${op} ${b} = ?`;
+      function update() {
+        current = new Date(Number(yInp.value), Number(mSel.value), 1);
+        render(current);
       }
 
-      function updateStats(){
+      prev.addEventListener('click', function() {
+        current.setMonth(current.getMonth() - 1);
+        setSelectors(current);
+        render(current);
+      });
+
+      next.addEventListener('click', function() {
+        current.setMonth(current.getMonth() + 1);
+        setSelectors(current);
+        render(current);
+      });
+
+      mSel.addEventListener('change', update);
+      yInp.addEventListener('change', update);
+
+      if (todayBtn) {
+        todayBtn.addEventListener('click', function() {
+          current = new Date();
+          setSelectors(current);
+          render(current);
+        });
+      }
+
+      buildSelectors();
+      setSelectors(current);
+      render(current);
+    })();
+
+    /* ===== Brain Game ===== */
+    (function() {
+      const qText = document.getElementById('qText');
+      const ans = document.getElementById('ans');
+      const submit = document.getElementById('submitAns');
+      const next = document.getElementById('nextQ');
+      const start = document.getElementById('start60');
+      const stop = document.getElementById('stopGame');
+      const tEl = document.getElementById('gTime');
+      const sEl = document.getElementById('gScore');
+      const rEl = document.getElementById('gRight');
+      const wEl = document.getElementById('gWrong');
+      const stEl = document.getElementById('gStreak');
+      const aEl = document.getElementById('gAcc');
+      const msg = document.getElementById('gMsg');
+
+      let correct = 0;
+      let wrong = 0;
+      let score = 0;
+      let streak = 0;
+      let total = 0;
+      let currentAns = null;
+      let timer = null;
+      let timeLeft = 0;
+      let running = false;
+
+      function rnd(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      function genQuestion() {
+        const ops = ['+', '-', 'x'];
+        const op = ops[rnd(0, ops.length - 1)];
+        let a = rnd(4, 99);
+        let b = rnd(3, 12);
+        
+        if (op === '+') {
+          b = rnd(4, 99);
+          currentAns = a + b;
+        } else if (op === '-') {
+          if (b > a) {
+            const t = a;
+            a = b;
+            b = t;
+          }
+          currentAns = a - b;
+        } else {
+          a = rnd(4, 12);
+          b = rnd(3, 12);
+          currentAns = a * b;
+        }
+        qText.textContent = a + ' ' + op + ' ' + b + ' = ?';
+      }
+
+      function updateStats() {
         total = correct + wrong;
-        const acc = total? Math.round(correct*100/total) : 0;
+        const acc = total ? Math.round(correct * 100 / total) : 0;
         sEl.textContent = score;
         rEl.textContent = correct;
         wEl.textContent = wrong;
@@ -826,510 +1756,676 @@
         aEl.textContent = acc + '%';
       }
 
-      function setGameUI(enabled){
+      function setGameUI(enabled) {
         ans.disabled = !enabled;
         submit.disabled = !enabled;
         next.disabled = !enabled;
-        if(enabled){ ans.focus(); }
+        if (enabled) ans.focus();
       }
 
-      function startPractice(){
-        // practice mode (no timer)
-        running = false; clearInterval(timer); tEl.textContent = '∞';
-        setGameUI(true); start.disabled=false; stop.disabled=true;
-        msg.textContent = 'Practice mode — unlimited time.'; msg.className='hint';
+      function startPractice() {
+        running = false;
+        clearInterval(timer);
+        tEl.textContent = 'inf';
+        setGameUI(true);
+        start.disabled = false;
+        stop.disabled = true;
+        msg.textContent = 'Practice mode - unlimited time.';
+        msg.className = 'game-hint';
       }
 
-      function start60s(){
-        running = true; timeLeft = 60; tEl.textContent = timeLeft + 's';
-        start.disabled=true; stop.disabled=false;
-        setGameUI(true); tick();
+      function start60s() {
+        running = true;
+        timeLeft = 60;
+        tEl.textContent = timeLeft + 's';
+        start.disabled = true;
+        stop.disabled = false;
+        setGameUI(true);
+        tick();
         timer = setInterval(tick, 1000);
-        msg.textContent = '60-second challenge started!'; msg.className='hint';
+        msg.textContent = '60-second challenge started!';
+        msg.className = 'game-hint';
       }
-      function stopNow(){
-        running = false; clearInterval(timer); start.disabled=false; stop.disabled=true;
-        tEl.textContent = '—'; msg.textContent = 'Stopped.'; msg.className='hint';
+
+      function stopNow() {
+        running = false;
+        clearInterval(timer);
+        start.disabled = false;
+        stop.disabled = true;
+        tEl.textContent = '-';
+        msg.textContent = 'Stopped.';
+        msg.className = 'game-hint';
       }
-      function tick(){
-        if(!running) return;
-        timeLeft--; tEl.textContent = timeLeft + 's';
-        if(timeLeft<=0){ clearInterval(timer); running=false; setGameUI(false); start.disabled=false; stop.disabled=true;
-          msg.textContent = `Time up! Score: ${score}, Accuracy: ${aEl.textContent}`; msg.className='hint';
+
+      function tick() {
+        if (!running) return;
+        timeLeft--;
+        tEl.textContent = timeLeft + 's';
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          running = false;
+          setGameUI(false);
+          start.disabled = false;
+          stop.disabled = true;
+          msg.textContent = 'Time up! Score: ' + score + ', Accuracy: ' + aEl.textContent;
+          msg.className = 'game-hint';
         }
       }
 
-      function submitAnswer(){
+      function submitAnswer() {
         const v = Number(ans.value);
-        if(!Number.isFinite(v)){ msg.textContent='Enter a number.'; msg.className='hint err'; return; }
-        if(v === currentAns){
-          correct++; streak++; score += (running? 2 : 1) + Math.min(streak,5); // small streak bonus
-          msg.textContent='Correct!'; msg.className='hint ok';
-        }else{
-          wrong++; streak=0; score = Math.max(0, score-1);
-          msg.textContent=`Wrong. Ans = ${currentAns}`; msg.className='hint err';
+        if (!Number.isFinite(v)) {
+          msg.textContent = 'Enter a number.';
+          msg.className = 'game-hint err';
+          return;
+        }
+        if (v === currentAns) {
+          correct++;
+          streak++;
+          score += (running ? 2 : 1) + Math.min(streak, 5);
+          msg.textContent = 'Correct!';
+          msg.className = 'game-hint ok';
+        } else {
+          wrong++;
+          streak = 0;
+          score = Math.max(0, score - 1);
+          msg.textContent = 'Wrong. Answer = ' + currentAns;
+          msg.className = 'game-hint err';
         }
         updateStats();
-        ans.value='';
+        ans.value = '';
         genQuestion();
       }
 
-      function nextQuestion(){ msg.textContent=''; genQuestion(); ans.value=''; ans.focus(); }
-
-      // wire
       submit.addEventListener('click', submitAnswer);
-      next.addEventListener('click', nextQuestion);
-      ans.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ submitAnswer(); } });
+      next.addEventListener('click', function() {
+        msg.textContent = '';
+        genQuestion();
+        ans.value = '';
+        ans.focus();
+      });
+      ans.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') submitAnswer();
+      });
       start.addEventListener('click', start60s);
       stop.addEventListener('click', stopNow);
 
-      // init
-      correct=wrong=score=streak=0; updateStats(); setGameUI(false);
-      genQuestion(); startPractice(); // default: practice ready
+      correct = wrong = score = streak = 0;
+      updateStats();
+      setGameUI(false);
+      genQuestion();
+      startPractice();
     })();
-  </script>
 
-  <script>
-    /* ===== Reel capacity logic ===== */
-    const FILL = 0.90;        // 90% target
-    const PF_CAL = 0.7855;    // factory calibration factor
+    /* ===== Reel Logic ===== */
+    const FILL = 0.90;
+    const PF_CAL = 0.7855;
 
     const reels = [
-      {reel:560,  od:560,  id:250, traverse:300},
-      {reel:600,  od:600,  id:400, traverse:315},
-      {reel:610,  od:610,  id:300, traverse:400},
-      {reel:700,  od:700,  id:400, traverse:355},
-      {reel:800,  od:800,  id:400, traverse:400},
-      {reel:900,  od:900,  id:565, traverse:400},
-      {reel:1000, od:1000, id:565, traverse:450},
-      {reel:1100, od:1100, id:600, traverse:500},
-      {reel:1200, od:1200, id:700, traverse:600},
-      {reel:1400, od:1400, id:800, traverse:700},
-      {reel:1600, od:1600, id:800, traverse:800},
-      {reel:1800, od:1800, id:850, traverse:900},
-      {reel:2000, od:2000, id:970, traverse:900}
+      { reel: 560, od: 560, id: 250, traverse: 300 },
+      { reel: 600, od: 600, id: 400, traverse: 315 },
+      { reel: 610, od: 610, id: 300, traverse: 400 },
+      { reel: 700, od: 700, id: 400, traverse: 355 },
+      { reel: 800, od: 800, id: 400, traverse: 400 },
+      { reel: 900, od: 900, id: 565, traverse: 400 },
+      { reel: 1000, od: 1000, id: 565, traverse: 450 },
+      { reel: 1100, od: 1100, id: 600, traverse: 500 },
+      { reel: 1200, od: 1200, id: 700, traverse: 600 },
+      { reel: 1400, od: 1400, id: 800, traverse: 700 },
+      { reel: 1600, od: 1600, id: 800, traverse: 800 },
+      { reel: 1800, od: 1800, id: 850, traverse: 900 },
+      { reel: 2000, od: 2000, id: 970, traverse: 900 }
     ];
 
-    function cap90_geometric(rod,rid,trv,d){ return FILL * (trv*((rod*rod - rid*rid)/(d*d)))/1000 }
-    function cap90_factory(rod,rid,trv,d){ return PF_CAL * cap90_geometric(rod,rid,trv,d) }
-    function fmtMeters(x){ if(!isFinite(x)) return '—'; return new Intl.NumberFormat(undefined,{maximumFractionDigits:0}).format(x) }
+    function cap90_geometric(rod, rid, trv, d) {
+      return FILL * (trv * ((rod * rod - rid * rid) / (d * d))) / 1000;
+    }
 
-    function setMode(m){
+    function cap90_factory(rod, rid, trv, d) {
+      return PF_CAL * cap90_geometric(rod, rid, trv, d);
+    }
+
+    function fmtMeters(x) {
+      if (!isFinite(x)) return '-';
+      return new Intl.NumberFormat(undefined, { maximumFractionDigits: 0 }).format(x);
+    }
+
+    function setMode(m) {
       const r = document.getElementById('panel-regular');
       const c = document.getElementById('panel-custom');
       const br = document.getElementById('mode-regular');
       const bc = document.getElementById('mode-custom');
-      if(m==='regular'){ r.style.display='block'; c.style.display='none'; br.classList.add('active'); bc.classList.remove('active'); }
-      else{ r.style.display='none'; c.style.display='block'; bc.classList.add('active'); br.classList.remove('active'); }
+      
+      if (m === 'regular') {
+        r.style.display = 'block';
+        c.style.display = 'none';
+        br.classList.add('active');
+        bc.classList.remove('active');
+      } else {
+        r.style.display = 'none';
+        c.style.display = 'block';
+        bc.classList.add('active');
+        br.classList.remove('active');
+      }
     }
 
-    function computeRegular(){
+    document.getElementById('mode-regular').addEventListener('click', function() { setMode('regular'); });
+    document.getElementById('mode-custom').addEventListener('click', function() { setMode('custom'); });
+
+    function computeRegular() {
       const d = +document.getElementById('r-cable-od').value;
       const L = +document.getElementById('r-length').value;
       const out = document.getElementById('r-out');
-      if(d<=0||L<=0){out.innerHTML = `<div>Please enter Cable OD and Length.</div>`;return}
-      let best = null;
-      for(const r of reels){ const capF = cap90_factory(r.od,r.id,r.traverse,d); if(capF>=L){best = {...r, capF, capG:cap90_geometric(r.od,r.id,r.traverse,d)}; break} }
-      if(!best){
-        const last=reels[reels.length-1];
-        const capF=cap90_factory(last.od,last.id,last.traverse,d);
-        out.innerHTML = `<div class="pill">Exceeds largest reel. Max standard: <b>${last.reel} × ${last.id} × ${last.traverse}</b> → <b class="mono">${fmtMeters(capF)} m</b> (factory)</div>`;
-        return
+      
+      if (d <= 0 || L <= 0) {
+        out.innerHTML = '<div class="note">Please enter Cable OD and Length.</div>';
+        return;
       }
-      const usage = L/best.capF*100;
-      out.innerHTML = `
-        <div class="caps">
-          <div class="pill">Reel: <b>${best.reel} × ${best.id} × ${best.traverse}</b> mm</div>
-          <div class="pill">Cap @90% (factory): <b class="mono">${fmtMeters(best.capF)} m</b></div>
-        </div>
-        <div class="caps" style="margin-top:6px">
-          <div class="pill">Length: <b class="mono">${fmtMeters(L)} m</b></div>
-          <div class="pill">Usage: <b class="mono">${usage.toFixed(1)}%</b></div>
-        </div>
-        <div class="note">Geometric @90% (no calibration): ${fmtMeters(best.capG)} m</div>`;
+      
+      let best = null;
+      for (let i = 0; i < reels.length; i++) {
+        const r = reels[i];
+        const capF = cap90_factory(r.od, r.id, r.traverse, d);
+        if (capF >= L) {
+          best = {
+            reel: r.reel,
+            od: r.od,
+            id: r.id,
+            traverse: r.traverse,
+            capF: capF,
+            capG: cap90_geometric(r.od, r.id, r.traverse, d)
+          };
+          break;
+        }
+      }
+      
+      if (!best) {
+        const last = reels[reels.length - 1];
+        const capF = cap90_factory(last.od, last.id, last.traverse, d);
+        out.innerHTML = '<div class="note">Exceeds largest reel. Max: ' + last.reel + ' - ' + fmtMeters(capF) + ' m</div>';
+        return;
+      }
+      
+      const usage = L / best.capF * 100;
+      
+      out.innerHTML = 
+        '<div class="result-grid">' +
+          '<div class="stat-box"><div class="stat-label">Reel</div><div class="stat-value">' + best.reel + '</div></div>' +
+          '<div class="stat-box"><div class="stat-label">Capacity</div><div class="stat-value">' + fmtMeters(best.capF) + ' m</div></div>' +
+          '<div class="stat-box"><div class="stat-label">Your Length</div><div class="stat-value">' + fmtMeters(L) + ' m</div></div>' +
+          '<div class="stat-box"><div class="stat-label">Usage</div><div class="stat-value">' + usage.toFixed(1) + '%</div></div>' +
+        '</div>';
     }
 
-    function computeCustom(){
+    function computeCustom() {
       const d = +document.getElementById('c-cable-od').value;
       const rod = +document.getElementById('c-rod').value;
       const rid = +document.getElementById('c-rid').value;
       const trv = +document.getElementById('c-trv').value;
       const out = document.getElementById('c-out');
-      if(d<=0||rod<=0||rid<=0||trv<=0){out.innerHTML = `<div>Please enter all reel and cable values.</div>`;return}
-      if(rid>=rod){out.innerHTML = `<div>Barrel ID must be smaller than Reel OD.</div>`;return}
-      const capG100 = (trv * ((rod*rod - rid*rid)/(d*d)))/1000; // 100% geometric
-      const cap90G  = cap90_geometric(rod,rid,trv,d);
-      const cap90F  = cap90_factory(rod,rid,trv,d);
-      out.innerHTML = `
-        <div class="caps">
-          <div class="pill">Cap @90% (factory): <b class="mono">${fmtMeters(cap90F)} m</b></div>
-          <div class="pill">@100% (geometric): <b class="mono">${fmtMeters(capG100)}</b> m</div>
-        </div>
-        <div class="note">Geometric @90% (no calibration): ${fmtMeters(cap90G)} m</div>
-        <table class="tbl mono" style="margin-top:8px">
-          <tr><th>Cable OD</th><th>Reel OD</th><th>Barrel ID</th><th>Traverse</th></tr>
-          <tr><td>${d} mm</td><td>${rod} mm</td><td>${rid} mm</td><td>${trv} mm</td></tr>
-        </table>`;
+      
+      if (d <= 0 || rod <= 0 || rid <= 0 || trv <= 0) {
+        out.innerHTML = '<div class="note">Please enter all values.</div>';
+        return;
+      }
+      if (rid >= rod) {
+        out.innerHTML = '<div class="note" style="border-color: var(--error);">Barrel ID must be smaller than Reel OD.</div>';
+        return;
+      }
+      
+      const capG100 = (trv * ((rod * rod - rid * rid) / (d * d))) / 1000;
+      const cap90G = cap90_geometric(rod, rid, trv, d);
+      const cap90F = cap90_factory(rod, rid, trv, d);
+      
+      out.innerHTML = 
+        '<div class="result-grid">' +
+          '<div class="stat-box"><div class="stat-label">@90% Factory</div><div class="stat-value">' + fmtMeters(cap90F) + ' m</div></div>' +
+          '<div class="stat-box"><div class="stat-label">@90% Geo</div><div class="stat-value">' + fmtMeters(cap90G) + ' m</div></div>' +
+          '<div class="stat-box"><div class="stat-label">@100% Geo</div><div class="stat-value">' + fmtMeters(capG100) + ' m</div></div>' +
+        '</div>';
     }
 
-    function buildReelTable(){
+    function buildReelTable() {
       const d = +document.getElementById('t-od').value;
       const L = +document.getElementById('t-len').value;
       const t = document.getElementById('reel-table');
-      if(!(d>0)){ t.innerHTML = '<tr><td>Please enter Cable OD.</td></tr>'; return }
-      const header = `<tr><th>Reel</th><th>OD</th><th>ID (Barrel)</th><th>Traverse</th><th>Cap @90% (factory, m)</th>${L>0?'<th>Fits '+fmtMeters(L)+' m?</th>':''}</tr>`;
-      const rows = reels.map(r=>{
-        const capF = cap90_factory(r.od,r.id,r.traverse,d);
-        const fits = L>0 ? (capF>=L? 'Yes' : 'No') : '';
-        const mark = L>0 && capF>=L ? ' style="font-weight:700"' : '';
-        return `<tr${mark}><td>${r.reel}</td><td>${r.od}</td><td>${r.id}</td><td>${r.traverse}</td><td>${fmtMeters(capF)}</td>${L>0?`<td>${fits}</td>`:''}</tr>`
-      });
-      t.innerHTML = [header, ...rows].join('');
+      
+      if (!(d > 0)) {
+        t.innerHTML = '<tr><td colspan="6"><div class="note">Enter Cable OD.</div></td></tr>';
+        return;
+      }
+      
+      let header = '<tr><th>Reel</th><th>OD</th><th>ID</th><th>Traverse</th><th>Cap @90% (m)</th>';
+      if (L > 0) header += '<th>Fits ' + fmtMeters(L) + 'm?</th>';
+      header += '</tr>';
+      
+      let rows = '';
+      for (let i = 0; i < reels.length; i++) {
+        const r = reels[i];
+        const capF = cap90_factory(r.od, r.id, r.traverse, d);
+        const fits = L > 0 ? (capF >= L ? 'Yes' : 'No') : '';
+        const highlight = L > 0 && capF >= L ? ' class="highlight"' : '';
+        
+        rows += '<tr' + highlight + '>';
+        rows += '<td>' + r.reel + '</td>';
+        rows += '<td>' + r.od + '</td>';
+        rows += '<td>' + r.id + '</td>';
+        rows += '<td>' + r.traverse + '</td>';
+        rows += '<td>' + fmtMeters(capF) + '</td>';
+        if (L > 0) rows += '<td>' + fits + '</td>';
+        rows += '</tr>';
+      }
+      
+      t.innerHTML = header + rows;
     }
 
-    function resetRegular(){ document.getElementById('r-cable-od').value=''; document.getElementById('r-length').value=''; document.getElementById('r-out').innerHTML='' }
-    function resetCustom(){ document.getElementById('c-cable-od').value=''; document.getElementById('c-rod').value=''; document.getElementById('c-rid').value=''; document.getElementById('c-trv').value=''; document.getElementById('c-out').innerHTML='' }
-
-    async function copyText(txt){ 
-      try{ 
-        await navigator.clipboard.writeText(txt); 
-        showNotification('Copied to clipboard!', 'success');
-        return true; 
-      } catch(e){ 
-        const ta=document.createElement('textarea'); 
-        ta.value=txt; 
-        document.body.appendChild(ta); 
-        ta.select(); 
-        const ok=document.execCommand('copy'); 
-        document.body.removeChild(ta); 
-        if(ok) showNotification('Copied to clipboard!', 'success');
-        return ok; 
-      } 
+    function resetRegular() {
+      document.getElementById('r-cable-od').value = '';
+      document.getElementById('r-length').value = '';
+      document.getElementById('r-out').innerHTML = '';
     }
-    async function copyRegular(){ const box=document.getElementById('r-out'); const btn=document.getElementById('r-copy'); const txt=box.innerText.trim(); if(!txt){btn.textContent='Copy';return} await copyText(txt); }
-    async function copyCustom(){ const box=document.getElementById('c-out'); const btn=document.getElementById('c-copy'); const txt=box.innerText.trim(); if(!txt){btn.textContent='Copy';return} await copyText(txt); }
 
-    // Self-tests (console)
-    (function(){
+    function resetCustom() {
+      document.getElementById('c-cable-od').value = '';
+      document.getElementById('c-rod').value = '';
+      document.getElementById('c-rid').value = '';
+      document.getElementById('c-trv').value = '';
+      document.getElementById('c-out').innerHTML = '';
+    }
+
+    async function copyText(txt) {
       try {
-        const approx = (a,b,eps=1)=> Math.abs(a-b) <= eps;
-        const g90 = cap90_geometric(1600,800,800,31);
-        console.assert(approx(Math.round(g90), 1439, 2), 'Test1: geometric 90% ≈ 1439 m, got', g90);
-        const f90 = cap90_factory(1600,800,800,31);
-        console.assert(approx(Math.round(f90), 1130, 3), 'Test2: factory 90% ≈ 1130 m, got', f90);
-        console.assert(typeof buildReelTable === 'function', 'Test3: buildReelTable missing');
-        console.log('%cReel tests passed','color:green');
-      } catch(e){ console.error('Reel self-tests error', e); }
-    })();
-  </script>
+        await navigator.clipboard.writeText(txt);
+        showNotification('Copied to clipboard!', 'success');
+        return true;
+      } catch (e) {
+        const ta = document.createElement('textarea');
+        ta.value = txt;
+        document.body.appendChild(ta);
+        ta.select();
+        const ok = document.execCommand('copy');
+        document.body.removeChild(ta);
+        if (ok) showNotification('Copied to clipboard!', 'success');
+        return ok;
+      }
+    }
 
-  <script>
-    /* ===== Copper Rod Conversion (scoped .cu) ===== */
-    (function(){
-      var FT_TO_M = 0.3048;
-      var DENS_KG_PER_M_PER_MM2 = 0.00896; // copper density conversion
+    function copyRegular() {
+      const box = document.getElementById('r-out');
+      const txt = box.innerText.trim();
+      if (txt) copyText(txt);
+    }
 
-      function el(id){ return document.getElementById(id); }
-      var tStrip = el('cu-tStrip');
-      var tRod   = el('cu-tRod');
-      var tRM    = el('cu-tRM');
-      var mode   = el('cu-mode');
+    function copyCustom() {
+      const box = document.getElementById('c-out');
+      const txt = box.innerText.trim();
+      if (txt) copyText(txt);
+    }
 
-      var width  = el('cu-width');
-      var thk    = el('cu-thickness');
-      var dia    = el('cu-diameter');
-      var areaRM = el('cu-areaRM');
+    /* ===== Copper Conversion ===== */
+    (function() {
+      const FT_TO_M = 0.3048;
+      const DENS_KG = 0.00896;
 
-      var given  = el('cu-given');
-      var givenLabel = el('cu-given-label');
+      function el(id) { return document.getElementById(id); }
+      
+      const tStrip = el('cu-tStrip');
+      const tRod = el('cu-tRod');
+      const tRM = el('cu-tRM');
+      const mode = el('cu-mode');
+      const width = el('cu-width');
+      const thk = el('cu-thickness');
+      const dia = el('cu-diameter');
+      const areaRM = el('cu-areaRM');
+      const given = el('cu-given');
+      const givenLabel = el('cu-given-label');
+      const areaEl = el('cu-area');
+      const kgpmEl = el('cu-kgpm');
+      const resHead = el('cu-result-head');
+      const resSub = el('cu-result-sub');
 
-      var areaEl = el('cu-area');
-      var kgpmEl = el('cu-kgpm');
-      var resHead= el('cu-result-head');
-      var resSub = el('cu-result-sub');
+      function setType(type) {
+        const isStrip = type === 'Strip';
+        const isRod = type === 'Rod';
+        const isRM = type === 'RM';
 
-      var btnReset = el('cu-reset');
-      var btnCopy  = el('cu-copy');
-      var btnSwap  = el('cu-quickSwap');
+        tStrip.classList.toggle('active', isStrip);
+        tRod.classList.toggle('active', isRod);
+        tRM.classList.toggle('active', isRM);
 
-      function setType(type){
-        var isStrip = type === 'Strip';
-        var isRod   = type === 'Rod';
-        var isRM    = type === 'RM';
-
-        tStrip.classList.toggle('active', isStrip); tStrip.setAttribute('aria-selected', isStrip);
-        tRod.classList.toggle('active', isRod);     tRod.setAttribute('aria-selected', isRod);
-        tRM.classList.toggle('active', isRM);       tRM.setAttribute('aria-selected', isRM);
-
-        document.querySelectorAll('.cu .only-strip').forEach(function(n){ n.style.display = isStrip ? 'block' : 'none'; });
-        document.querySelectorAll('.cu .only-rod').forEach(function(n){   n.style.display = isRod   ? 'block' : 'none'; });
-        document.querySelectorAll('.cu .only-rm').forEach(function(n){    n.style.display = isRM    ? 'block' : 'none'; });
+        document.querySelectorAll('.only-strip').forEach(function(n) { n.style.display = isStrip ? 'block' : 'none'; });
+        document.querySelectorAll('.only-rod').forEach(function(n) { n.style.display = isRod ? 'block' : 'none'; });
+        document.querySelectorAll('.only-rm').forEach(function(n) { n.style.display = isRM ? 'block' : 'none'; });
 
         compute();
       }
-      function currentType(){
-        if(tStrip.classList.contains('active')) return 'Strip';
-        if(tRod.classList.contains('active')) return 'Rod';
-        if(tRM.classList.contains('active')) return 'RM';
-        return 'Strip';
+
+      function currentType() {
+        if (tStrip.classList.contains('active')) return 'Strip';
+        if (tRod.classList.contains('active')) return 'Rod';
+        return 'RM';
       }
-      function updateGivenUI(){
-        var m = mode.value, label = 'Given', ph='';
-        if(m === 'Meter to Kg'){ label = 'Given Meter'; ph='e.g., 100'; }
-        else if(m === 'Ft to Kg'){ label = 'Given Ft'; ph='e.g., 500'; }
-        else { label = 'Given Kg'; ph='e.g., 500'; }
-        givenLabel.textContent = label; given.placeholder = ph;
+
+      function updateGivenUI() {
+        const m = mode.value;
+        let label = 'Given Kg';
+        let ph = 'e.g., 500';
+        
+        if (m === 'Meter to Kg') {
+          label = 'Given Meter';
+          ph = 'e.g., 100';
+        } else if (m === 'Ft to Kg') {
+          label = 'Given Ft';
+          ph = 'e.g., 500';
+        }
+        
+        givenLabel.textContent = label;
+        given.placeholder = ph;
       }
-      function num(v){ var n = Number(v); return isFinite(n) ? n : NaN; }
-      function computeArea(){
-        var type = currentType();
-        if(type === 'Strip'){
-          var w = num(width.value), t = num(thk.value);
-          if(!(w>0) || !(t>0)) return 0; return w*t;
-        } else if(type === 'Rod'){
-          var d = num(dia.value);
-          if(!(d>0)) return 0; return Math.PI * d * d / 4;
+
+      function num(v) {
+        const n = Number(v);
+        return isFinite(n) ? n : NaN;
+      }
+
+      function computeArea() {
+        const type = currentType();
+        if (type === 'Strip') {
+          const w = num(width.value);
+          const t = num(thk.value);
+          if (!(w > 0) || !(t > 0)) return 0;
+          return w * t;
+        } else if (type === 'Rod') {
+          const d = num(dia.value);
+          if (!(d > 0)) return 0;
+          return Math.PI * d * d / 4;
         } else {
-          var a = num(areaRM.value); return a>0 ? a : 0;
+          const a = num(areaRM.value);
+          return a > 0 ? a : 0;
         }
       }
-      function compute(){
-        var a = computeArea();
-        if(areaEl) areaEl.textContent = a ? a.toFixed(2) : '—';
-        if(a <= 0){
-          if(kgpmEl) kgpmEl.textContent = '—';
-          resHead.textContent = 'Result: —';
-          resSub.textContent = 'Cross-section area is zero — enter required dimensions.';
+
+      function compute() {
+        const a = computeArea();
+        areaEl.textContent = a ? a.toFixed(2) : '-';
+        
+        if (a <= 0) {
+          kgpmEl.textContent = '-';
+          resHead.textContent = 'Result: -';
+          resSub.textContent = 'Enter dimensions to calculate.';
           return;
         }
-        var kgpm = DENS_KG_PER_M_PER_MM2 * a;
-        if(kgpmEl) kgpmEl.textContent = kgpm.toFixed(4);
+        
+        const kgpm = DENS_KG * a;
+        kgpmEl.textContent = kgpm.toFixed(4);
 
-        var g = num(given.value);
-        if(!(g>=0)){ resHead.textContent='Result: —'; resSub.textContent='Enter a non-negative value.'; return; }
-
-        var m = mode.value, out = NaN, unit = '';
-        if(m === 'Meter to Kg'){ out = g * kgpm; unit='kg'; }
-        else if(m === 'Ft to Kg'){ out = g * FT_TO_M * kgpm; unit='kg'; }
-        else if(m === 'Kg to Meter'){ out = g / kgpm; unit='m'; }
-        else if(m === 'Kg to Ft'){ out = g / (FT_TO_M * kgpm); unit='ft'; }
-
-        if(!isFinite(out)){ resHead.textContent='Result: —'; resSub.textContent='Cannot compute result — check inputs.'; return; }
-
-        var main = Number(out.toFixed(2)).toLocaleString();
-        resHead.textContent = 'Result: ' + main + ' ' + unit;
-
-        var type = currentType();
-        var dims = (type === 'Strip')
-          ? ('W = ' + Number(width.value||0) + ' mm · T = ' + Number(thk.value||0) + ' mm')
-          : (type === 'Rod' ? ('D = ' + Number(dia.value||0) + ' mm') : ('Area = ' + Number(areaRM.value||0) + ' mm²'));
-        resSub.textContent = (document.getElementById('cu-given-label').textContent) + ': ' + Number(g) + ' · ' + dims;
-      }
-      function resetAll(){
-        setType('Strip'); mode.value='Kg to Meter';
-        width.value=''; thk.value=''; dia.value=''; areaRM.value=''; given.value='';
-        updateGivenUI(); compute();
-      }
-      function swap(){
-        var m = mode.value;
-        if(m === 'Kg to Meter'){ mode.value = 'Meter to Kg'; }
-        else if(m === 'Meter to Kg'){ mode.value = 'Kg to Meter'; }
-        else if(m === 'Kg to Ft'){ mode.value = 'Ft to Kg'; }
-        else if(m === 'Ft to Kg'){ mode.value = 'Kg to Ft'; }
-        updateGivenUI(); compute();
-      }
-
-      // Events
-      tStrip.addEventListener('click', function(){ setType('Strip'); });
-      tRod.addEventListener('click',   function(){ setType('Rod');   });
-      tRM.addEventListener('click',    function(){ setType('RM');    });
-      mode.addEventListener('change',  function(){ updateGivenUI(); compute(); });
-      [width, thk, dia, areaRM, given].forEach(function(elm){ elm.addEventListener('input', compute); });
-      document.getElementById('cu-reset').addEventListener('click', resetAll);
-      document.getElementById('cu-copy').addEventListener('click', function(){
-        var txt = (document.getElementById('cu-result-head').textContent||'') + ' | ' + (document.getElementById('cu-result-sub').textContent||'');
-        copyText(txt);
-      });
-      document.getElementById('cu-quickSwap').addEventListener('click', swap);
-
-      // Init
-      setType('Strip'); updateGivenUI(); compute();
-    })();
-  </script>
-
-  <!-- ===== PVC Weight Calculator (now with Copper & Total) ===== -->
-  <script>
-    (function(){
-      const pi = Math.PI;
-
-      // helpers
-      const ringArea = (Do, Di) => (pi/4) * (Do*Do - Di*Di);                 // mm²
-      const kgFrom   = (area_mm2, L_m, rho_gcc) => area_mm2 * L_m * (rho_gcc/1000); // kg (since mm²·m = cm³)
-      const fmt = n => Number(n).toLocaleString(undefined,{maximumFractionDigits:3});
-      const g = id => document.getElementById(id);
-
-      // constants
-      const RHO_CU = 8.96; // g/cm³
-
-      // shared
-      const rho = g('pv-rho');
-      const L   = g('pv-L');
-
-      // mode toggle
-      const bSC = g('pv-mode-sc');
-      const bMC = g('pv-mode-mc');
-      const sc  = g('pv-sc');
-      const mc  = g('pv-mc');
-
-      bSC.addEventListener('click', ()=>{ bSC.classList.add('active'); bMC.classList.remove('active'); sc.style.display='block'; mc.style.display='none'; });
-      bMC.addEventListener('click', ()=>{ bMC.classList.add('active'); bSC.classList.remove('active'); sc.style.display='none'; mc.style.display='block'; });
-
-      /* --- Single-core --- */
-      const scCU  = g('pv-sc-cu');
-      const scINS = g('pv-sc-ins');
-      const scSH  = g('pv-sc-sh');
-      const scOut = g('pv-sc-out');
-
-      function calcSC(){
-        const d_cu  = +scCU.value;
-        const t_ins = +scINS.value;
-        const t_sh  = +scSH.value;
-        const len   = +L.value;
-        const r     = +rho.value;
-
-        if(!(d_cu>0 && t_ins>=0 && t_sh>=0 && len>=0 && r>0)){ scOut.textContent = 'Enter valid inputs.'; return; }
-
-        const d_ins = d_cu + 2*t_ins;
-        const d_fin = d_ins + 2*t_sh;
-
-        const A_ins = ringArea(d_ins, d_cu);
-        const A_sh  = ringArea(d_fin, d_ins);
-        const A_totPVC = A_ins + A_sh;
-
-        // PVC
-        const pvc_kgpm  = kgFrom(A_totPVC, 1, r);
-        const pvc_kgl   = kgFrom(A_totPVC, len, r);
-
-        // Copper
-        const A_cu   = ringArea(d_cu, 0);
-        const cu_kgpm = kgFrom(A_cu, 1, RHO_CU);
-        const cu_kgl  = kgFrom(A_cu, len, RHO_CU);
-
-        // Total
-        const tot_kgpm = pvc_kgpm + cu_kgpm;
-        const tot_kgl  = pvc_kgl + cu_kgl;
-
-        scOut.innerHTML = `
-          PVC = <b>${fmt(pvc_kgpm)}</b> kg/m · <b>${fmt(pvc_kgl)}</b> kg for ${fmt(len)} m<br>
-          Copper = <b>${fmt(cu_kgpm)}</b> kg/m · <b>${fmt(cu_kgl)}</b> kg for ${fmt(len)} m<br>
-          <span style="display:inline-block;margin-top:2px">Total Weight = <b>${fmt(tot_kgpm)}</b> kg/m · <b>${fmt(tot_kgl)}</b> kg for ${fmt(len)} m</span><br>
-          Areas (mm²): Insulation <b>${fmt(A_ins)}</b> · Sheath <b>${fmt(A_sh)}</b> · Total <b>${fmt(A_totPVC)}</b><br>
-          Insulated OD = <b>${fmt(d_ins)}</b> mm, Final OD = <b>${fmt(d_fin)}</b> mm
-        `;
-      }
-      g('pv-sc-calc').addEventListener('click', calcSC);
-      g('pv-sc-reset').addEventListener('click', ()=>{ scCU.value=''; scINS.value=''; scSH.value=''; scOut.textContent=''; });
-      g('pv-sc-copy').addEventListener('click', ()=>{
-        const t = scOut.innerText.trim(); if(!t) return;
-        navigator.clipboard.writeText(t).then(()=> window.showNotification?.('Copied!', 'success'));
-      });
-
-      /* --- Multicore --- */
-      const mcN    = g('pv-mc-n');
-      const mcCU   = g('pv-mc-cu');
-      const mcINS  = g('pv-mc-ins');
-      const mcInTh = g('pv-mc-inner');
-      const mcSH   = g('pv-mc-sh');
-      const mcInOD = g('pv-mc-innerOD');
-      const mcOut  = g('pv-mc-out');
-
-      function estimateInnerOD(){
-        const N     = +mcN.value;
-        const d_cu  = +mcCU.value;
-        const t_ins = +mcINS.value;
-
-        if(!(N>=1 && d_cu>0 && t_ins>=0)){ mcOut.textContent='Enter N, Bare OD, Insulation first.'; return; }
-        const d_ins = d_cu + 2*t_ins;
-
-        // base geometric pack (no gaps)
-        let k = 0;
-        if(N===1) k = 1.000;
-        else if(N===2) k = 2.000;
-        else if(N===3) k = 2.155;     // 2*(1/√3 + 1/2)
-        else if(N===4) k = 2.414;     // 1 + √2
-        else { mcOut.textContent='Estimator supports N=1..4; please enter Inner OD manually.'; return; }
-
-        const fill = 1.05; // 5% allowance for lay/voids
-        const D    = k * d_ins * fill;
-        mcInOD.value = D.toFixed(2);
-        window.showNotification?.('Inner OD estimated', 'info');
-      }
-
-      function calcMC(){
-        const N     = +mcN.value;
-        const d_cu  = +mcCU.value;
-        const t_ins = +mcINS.value;
-        const t_in  = +mcInTh.value;
-        const t_sh  = +mcSH.value;
-        const D_in  = +mcInOD.value; // OD before inner sheath
-        const len   = +L.value;
-        const r     = +rho.value;
-
-        if(!(N>=1 && d_cu>0 && t_ins>=0 && t_in>=0 && t_sh>=0 && len>=0 && r>0)){
-          mcOut.textContent = 'Enter valid inputs.'; return;
+        const g = num(given.value);
+        if (!(g >= 0)) {
+          resHead.textContent = 'Result: -';
+          resSub.textContent = 'Enter a value.';
+          return;
         }
 
-        const d_ins = d_cu + 2*t_ins;
-        let D_bundle = D_in;
-        if(!(D_bundle>0)){
-          // try estimate for N=1..4 if user didn’t give inner OD
-          let k=0;
-          if(N===1) k=1.000; else if(N===2) k=2.000; else if(N===3) k=2.155; else if(N===4) k=2.414;
-          if(k===0){ mcOut.textContent='Provide Inner OD or use Estimate (N=1..4).'; return; }
+        const m = mode.value;
+        let out = NaN;
+        let unit = '';
+        
+        if (m === 'Meter to Kg') {
+          out = g * kgpm;
+          unit = 'kg';
+        } else if (m === 'Ft to Kg') {
+          out = g * FT_TO_M * kgpm;
+          unit = 'kg';
+        } else if (m === 'Kg to Meter') {
+          out = g / kgpm;
+          unit = 'm';
+        } else if (m === 'Kg to Ft') {
+          out = g / (FT_TO_M * kgpm);
+          unit = 'ft';
+        }
+
+        if (!isFinite(out)) {
+          resHead.textContent = 'Result: -';
+          resSub.textContent = 'Cannot compute.';
+          return;
+        }
+
+        const main = Number(out.toFixed(2)).toLocaleString();
+        resHead.textContent = 'Result: ' + main + ' ' + unit;
+        resSub.textContent = givenLabel.textContent + ': ' + g;
+      }
+
+      function resetAll() {
+        setType('Strip');
+        mode.value = 'Kg to Meter';
+        width.value = '';
+        thk.value = '';
+        dia.value = '';
+        areaRM.value = '';
+        given.value = '';
+        updateGivenUI();
+        compute();
+      }
+
+      function swap() {
+        const m = mode.value;
+        if (m === 'Kg to Meter') mode.value = 'Meter to Kg';
+        else if (m === 'Meter to Kg') mode.value = 'Kg to Meter';
+        else if (m === 'Kg to Ft') mode.value = 'Ft to Kg';
+        else if (m === 'Ft to Kg') mode.value = 'Kg to Ft';
+        updateGivenUI();
+        compute();
+      }
+
+      tStrip.addEventListener('click', function() { setType('Strip'); });
+      tRod.addEventListener('click', function() { setType('Rod'); });
+      tRM.addEventListener('click', function() { setType('RM'); });
+      mode.addEventListener('change', function() { updateGivenUI(); compute(); });
+      
+      [width, thk, dia, areaRM, given].forEach(function(elm) {
+        elm.addEventListener('input', compute);
+      });
+
+      el('cu-reset').addEventListener('click', resetAll);
+      el('cu-copy').addEventListener('click', function() {
+        const txt = resHead.textContent + ' | ' + resSub.textContent;
+        copyText(txt);
+      });
+      el('cu-quickSwap').addEventListener('click', swap);
+
+      setType('Strip');
+      updateGivenUI();
+      compute();
+    })();
+
+    /* ===== PVC Weight ===== */
+    (function() {
+      const pi = Math.PI;
+      const ringArea = function(Do, Di) { return (pi / 4) * (Do * Do - Di * Di); };
+      const kgFrom = function(area_mm2, L_m, rho_gcc) { return area_mm2 * L_m * (rho_gcc / 1000); };
+      const fmt = function(n) { return Number(n).toLocaleString(undefined, { maximumFractionDigits: 3 }); };
+      const g = function(id) { return document.getElementById(id); };
+      
+      const RHO_CU = 8.96;
+      const rho = g('pv-rho');
+      const L = g('pv-L');
+      const bSC = g('pv-mode-sc');
+      const bMC = g('pv-mode-mc');
+      const sc = g('pv-sc');
+      const mc = g('pv-mc');
+
+      bSC.addEventListener('click', function() {
+        bSC.classList.add('active');
+        bMC.classList.remove('active');
+        sc.style.display = 'block';
+        mc.style.display = 'none';
+      });
+
+      bMC.addEventListener('click', function() {
+        bMC.classList.add('active');
+        bSC.classList.remove('active');
+        sc.style.display = 'none';
+        mc.style.display = 'block';
+      });
+
+      // Single-core
+      const scCU = g('pv-sc-cu');
+      const scINS = g('pv-sc-ins');
+      const scSH = g('pv-sc-sh');
+      const scOut = g('pv-sc-out');
+
+      function calcSC() {
+        const d_cu = +scCU.value;
+        const t_ins = +scINS.value;
+        const t_sh = +scSH.value;
+        const len = +L.value;
+        const r = +rho.value;
+
+        if (!(d_cu > 0 && t_ins >= 0 && t_sh >= 0 && len >= 0 && r > 0)) {
+          scOut.textContent = 'Enter valid inputs.';
+          return;
+        }
+
+        const d_ins = d_cu + 2 * t_ins;
+        const d_fin = d_ins + 2 * t_sh;
+        const A_ins = ringArea(d_ins, d_cu);
+        const A_sh = ringArea(d_fin, d_ins);
+        const A_totPVC = A_ins + A_sh;
+
+        const pvc_kgpm = kgFrom(A_totPVC, 1, r);
+        const pvc_kgl = kgFrom(A_totPVC, len, r);
+
+        const A_cu = ringArea(d_cu, 0);
+        const cu_kgpm = kgFrom(A_cu, 1, RHO_CU);
+        const cu_kgl = kgFrom(A_cu, len, RHO_CU);
+
+        const tot_kgpm = pvc_kgpm + cu_kgpm;
+        const tot_kgl = pvc_kgl + cu_kgl;
+
+        scOut.innerHTML = 
+          'PVC = <b>' + fmt(pvc_kgpm) + '</b> kg/m - <b>' + fmt(pvc_kgl) + '</b> kg for ' + fmt(len) + ' m<br>' +
+          'Copper = <b>' + fmt(cu_kgpm) + '</b> kg/m - <b>' + fmt(cu_kgl) + '</b> kg for ' + fmt(len) + ' m<br>' +
+          'Total = <b>' + fmt(tot_kgpm) + '</b> kg/m - <b>' + fmt(tot_kgl) + '</b> kg for ' + fmt(len) + ' m<br>' +
+          'Final OD = <b>' + fmt(d_fin) + '</b> mm';
+      }
+
+      g('pv-sc-calc').addEventListener('click', calcSC);
+      g('pv-sc-reset').addEventListener('click', function() {
+        scCU.value = '';
+        scINS.value = '';
+        scSH.value = '';
+        scOut.textContent = '';
+      });
+      g('pv-sc-copy').addEventListener('click', function() {
+        const t = scOut.innerText.trim();
+        if (t) copyText(t);
+      });
+
+      // Multicore
+      const mcN = g('pv-mc-n');
+      const mcCU = g('pv-mc-cu');
+      const mcINS = g('pv-mc-ins');
+      const mcInTh = g('pv-mc-inner');
+      const mcSH = g('pv-mc-sh');
+      const mcInOD = g('pv-mc-innerOD');
+      const mcOut = g('pv-mc-out');
+
+      function estimateInnerOD() {
+        const N = +mcN.value;
+        const d_cu = +mcCU.value;
+        const t_ins = +mcINS.value;
+
+        if (!(N >= 1 && d_cu > 0 && t_ins >= 0)) {
+          mcOut.textContent = 'Enter N, Bare OD, Insulation first.';
+          return;
+        }
+
+        const d_ins = d_cu + 2 * t_ins;
+        let k = 0;
+        if (N === 1) k = 1.000;
+        else if (N === 2) k = 2.000;
+        else if (N === 3) k = 2.155;
+        else if (N === 4) k = 2.414;
+        else {
+          mcOut.textContent = 'Estimator supports N=1-4. Enter Inner OD manually.';
+          return;
+        }
+
+        const fill = 1.05;
+        const D = k * d_ins * fill;
+        mcInOD.value = D.toFixed(2);
+        showNotification('Inner OD estimated', 'info');
+      }
+
+      function calcMC() {
+        const N = +mcN.value;
+        const d_cu = +mcCU.value;
+        const t_ins = +mcINS.value;
+        const t_in = +mcInTh.value;
+        const t_sh = +mcSH.value;
+        let D_bundle = +mcInOD.value;
+        const len = +L.value;
+        const r = +rho.value;
+
+        if (!(N >= 1 && d_cu > 0 && t_ins >= 0 && t_in >= 0 && t_sh >= 0 && len >= 0 && r > 0)) {
+          mcOut.textContent = 'Enter valid inputs.';
+          return;
+        }
+
+        const d_ins = d_cu + 2 * t_ins;
+        
+        if (!(D_bundle > 0)) {
+          let k = 0;
+          if (N === 1) k = 1.000;
+          else if (N === 2) k = 2.000;
+          else if (N === 3) k = 2.155;
+          else if (N === 4) k = 2.414;
+          if (k === 0) {
+            mcOut.textContent = 'Provide Inner OD or use Estimate (N=1-4).';
+            return;
+          }
           D_bundle = k * d_ins * 1.05;
         }
 
-        const D_innerSheathOD = D_bundle + 2*t_in;
-        const D_final         = D_innerSheathOD + 2*t_sh;
+        const D_innerSheathOD = D_bundle + 2 * t_in;
+        const D_final = D_innerSheathOD + 2 * t_sh;
 
-        // PVC areas
-        const A_insTot  = N * ringArea(d_ins, d_cu);
-        const A_inner   = ringArea(D_innerSheathOD, D_bundle);
-        const A_outer   = ringArea(D_final, D_innerSheathOD);
-        const A_totPVC  = A_insTot + A_inner + A_outer;
+        const A_insTot = N * ringArea(d_ins, d_cu);
+        const A_inner = ringArea(D_innerSheathOD, D_bundle);
+        const A_outer = ringArea(D_final, D_innerSheathOD);
+        const A_totPVC = A_insTot + A_inner + A_outer;
 
-        // PVC
-        const pvc_kgpm  = kgFrom(A_totPVC, 1, r);
-        const pvc_kgl   = kgFrom(A_totPVC, len, r);
+        const pvc_kgpm = kgFrom(A_totPVC, 1, r);
+        const pvc_kgl = kgFrom(A_totPVC, len, r);
 
-        // Copper (all cores)
-        const A_cu_core = ringArea(d_cu, 0);
-        const A_cu_tot  = N * A_cu_core;
-        const cu_kgpm   = kgFrom(A_cu_tot, 1, RHO_CU);
-        const cu_kgl    = kgFrom(A_cu_tot, len, RHO_CU);
+        const A_cu_tot = N * ringArea(d_cu, 0);
+        const cu_kgpm = kgFrom(A_cu_tot, 1, RHO_CU);
+        const cu_kgl = kgFrom(A_cu_tot, len, RHO_CU);
 
-        // Total
         const tot_kgpm = pvc_kgpm + cu_kgpm;
-        const tot_kgl  = pvc_kgl + cu_kgl;
+        const tot_kgl = pvc_kgl + cu_kgl;
 
-        mcOut.innerHTML = `
-          PVC = <b>${fmt(pvc_kgpm)}</b> kg/m · <b>${fmt(pvc_kgl)}</b> kg for ${fmt(len)} m<br>
-          Copper = <b>${fmt(cu_kgpm)}</b> kg/m · <b>${fmt(cu_kgl)}</b> kg for ${fmt(len)} m<br>
-          <span style="display:inline-block;margin-top:2px">Total Weight = <b>${fmt(tot_kgpm)}</b> kg/m · <b>${fmt(tot_kgl)}</b> kg for ${fmt(len)} m</span><br>
-          Per-core insulated OD = <b>${fmt(d_ins)}</b> mm · Bundle Inner OD = <b>${fmt(D_bundle)}</b> mm<br>
-          Inner sheath OD = <b>${fmt(D_innerSheathOD)}</b> mm · Final OD = <b>${fmt(D_final)}</b> mm<br>
-          Areas (mm²): N×Ins <b>${fmt(A_insTot)}</b> · Inner <b>${fmt(A_inner)}</b> · Outer <b>${fmt(A_outer)}</b> · Total <b>${fmt(A_totPVC)}</b>
-        `;
+        mcOut.innerHTML = 
+          'PVC = <b>' + fmt(pvc_kgpm) + '</b> kg/m - <b>' + fmt(pvc_kgl) + '</b> kg for ' + fmt(len) + ' m<br>' +
+          'Copper = <b>' + fmt(cu_kgpm) + '</b> kg/m - <b>' + fmt(cu_kgl) + '</b> kg for ' + fmt(len) + ' m<br>' +
+          'Total = <b>' + fmt(tot_kgpm) + '</b> kg/m - <b>' + fmt(tot_kgl) + '</b> kg for ' + fmt(len) + ' m<br>' +
+          'Final OD = <b>' + fmt(D_final) + '</b> mm';
       }
 
       g('pv-mc-est').addEventListener('click', estimateInnerOD);
       g('pv-mc-calc').addEventListener('click', calcMC);
-      g('pv-mc-reset').addEventListener('click', ()=>{
-        mcN.value=4; mcCU.value=''; mcINS.value=''; mcInTh.value=''; mcSH.value=''; mcInOD.value=''; mcOut.textContent='';
+      g('pv-mc-reset').addEventListener('click', function() {
+        mcN.value = 4;
+        mcCU.value = '';
+        mcINS.value = '';
+        mcInTh.value = '';
+        mcSH.value = '';
+        mcInOD.value = '';
+        mcOut.textContent = '';
       });
-      g('pv-mc-copy').addEventListener('click', ()=>{
-        const t = mcOut.innerText.trim(); if(!t) return;
-        navigator.clipboard.writeText(t).then(()=> window.showNotification?.('Copied!', 'success'));
+      g('pv-mc-copy').addEventListener('click', function() {
+        const t = mcOut.innerText.trim();
+        if (t) copyText(t);
       });
     })();
   </script>
